@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/login_page.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post" id="login-form">
+        <h1 class="form-title">Авторизация</h1>
+        <div id="form-inner">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.email.label(class="form-label form-first-field") }}<br>
+                {{ form.email(class="form-control", type="email") }}<br>
+                {% for error in form.email.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.password.label(class="form-label") }}<br>
+                {{ form.password(class="form-control", type="password") }}<br>
+                {% for error in form.password.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </p>
+            <p class=remember_me-block>
+                {{ form.remember_me(class="remember_me-checkbox") }}
+                {{ form.remember_me.label(class="remember_me-label") }}
+            </p>
+            <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+            {% if message %}
+                <div class="form-error-message">{{ message }}</div>
+            {% endif %}
+        </div>
+    </form>
+{% endblock %}

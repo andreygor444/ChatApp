@@ -1,0 +1,94 @@
+html, body {
+	height: 100%;
+}
+
+.header {
+	background-color: #347da8;
+	font-family: Ubuntu, "times new roman", times, roman, serif;
+}
+
+.header-inner {
+	width: 99%;
+	margin: 0.5%;
+	background-color: #3792cb;
+	border-radius: 10px;
+	display:inline-block;
+}
+
+#app-name>h1 {
+	font-weight: 600;
+	margin-top: 5px;
+	margin-left: 30px;
+	font-size: 45px;
+}
+
+#login-form {
+	width: 40%;
+	height: 80%;
+	bottom: 0;
+	position: absolute;
+	margin-left: 30%;
+	border: 5px solid #326da6;
+	border-bottom: 0px;
+	border-top-left-radius: 30px;
+	border-top-right-radius: 30px;
+	background-color: #2585c0;
+}
+
+.form-title {
+	margin-top: 10px;
+	font-weight: 600;
+	text-align: center;
+	font-family: Ubuntu, "times new roman", times, roman, serif;
+}
+
+#form-inner {
+	width: 60%;
+	margin-left: 20%;
+}
+
+.form-first-field {
+	margin-top: 20px;
+}
+
+.form-label {
+	text-indent: 20px;
+	font-size: 22px;
+	font-family: Ubuntu, "times new roman", times, roman, serif;
+}
+
+.remember_me-block {
+	height: 40px;
+}
+
+.remember_me-label {
+	font-size: 23px;
+	height: 50px;
+	font-family: Ubuntu, "times new roman", times, roman, serif;
+}
+
+.remember_me-checkbox {
+	width: 18px;
+	height: 18px;
+}
+
+#submit {
+	width: 100%;
+	height: 20%;
+	margin-bottom: 20px;
+	font-size: 25px;
+	background-color: #30ff30;
+	border: 3px solid #10aa10;
+	border-radius: 20px;
+	font-family: Ubuntu, "times new roman", times, roman, serif;
+}
+
+.form-error-message {
+	margin-bottom: 20px;
+	font-size: 25px;
+	color: rgba(70, 0, 0, 0.6);
+	background-color: rgba(170,20,20,0.4);
+	border: 5px solid rgba(170,20,20,0.2);
+	border-radius: 10px;
+	font-family: Ubuntu, "times new roman", times, roman, serif;
+}
