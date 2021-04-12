@@ -1,11 +1,10 @@
 from data.users import User
 
 
-def add_user(db_sess, name, surname, about, email, password):
+def add_user(db_sess, name, surname, email, password):
 	user = User()
 	user.name = name
 	user.surname = surname
-	user.about = about
 	user.email = email
 	user.set_password(password)
 	db_sess.add(user)

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css"/>
+    <script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/errors_closer.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/register_form_slider.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post" id="register-form" data-simplebar data-simplebar-auto-hide="false">
+        <h1 class="form-title">Регистрация</h1>
+        <div id="form-inner">
+            {{ form.hidden_tag() }}
+            {% for field in form %}
+                {% if loop.index < 6 %}
+                    <p>
+                        {{ field.label(class="form-label form-first-field") }}
+                        {{ field(class="form-control") }}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </p>
+                {% endif %}
+            {% endfor %}
+            <br>
+            {% if message %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endif %}
+            <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        </div>
+    </form>
+{% endblock %}

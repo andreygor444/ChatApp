@@ -1,3 +1,6 @@
+/* COMMON */
+
+
 html, body {
 	height: 100%;
 }
@@ -22,7 +25,11 @@ html, body {
 	font-size: 45px;
 }
 
-#login-form {
+
+/* LOGIN/REGISTER PAGES */
+
+
+#login-form, #register-form {
 	width: 40%;
 	height: 80%;
 	bottom: 0;
@@ -30,6 +37,7 @@ html, body {
 	margin-left: 30%;
 	border: 5px solid #326da6;
 	border-bottom: 0px;
+	overflow: auto;
 	border-top-left-radius: 30px;
 	border-top-right-radius: 30px;
 	background-color: #2585c0;
@@ -83,12 +91,34 @@ html, body {
 	font-family: Ubuntu, "times new roman", times, roman, serif;
 }
 
-.form-error-message {
-	margin-bottom: 20px;
-	font-size: 25px;
-	color: rgba(70, 0, 0, 0.6);
-	background-color: rgba(170,20,20,0.4);
-	border: 5px solid rgba(170,20,20,0.2);
-	border-radius: 10px;
+.alert-danger {
 	font-family: Ubuntu, "times new roman", times, roman, serif;
+}
+
+#registered-successfully>h1 {
+	font-weight: 600;
+	font-size: 70px;
+	text-align: center;
+	margin-top: 15%;
+	font-family: Ubuntu, "times new roman", times, roman, serif;
+}
+
+#redirect-to-login-page {
+	margin-top: 1%;
+}
+
+#redirect-to-login-page>a>button {
+	font-weight: 600;
+	font-size: 50px;
+	width: 30%;
+	background-color: #30ff30;
+	color: black;
+	margin-left: 35%;
+	font-family: Ubuntu, "times new roman", times, roman, serif;
+	border: 3px solid #20aa30;
+	border-radius: 20px;
+}
+
+.simplebar-scrollbar {
+	top: 20px;
 }

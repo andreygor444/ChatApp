@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template
+from flask import Flask, redirect, render_template, abort
 from flask_login import LoginManager, login_user, login_required
 
 from data.db_session import db_session_init, create_session
@@ -8,13 +8,16 @@ from data.messages import Message
 
 from forms import *
 from utils import *
+from unique_codes_manager import UniqueCodesManager
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'workout'
+app.config["SECRET_KEY"] = "workout"
 db_session_init("db/main.db")
 login_manager = LoginManager()
 login_manager.init_app(app)
+unique_codes_manager = UniqueCodesManager()
+unique_codes_manager.generate_unique_codes(10)
 
 
 @login_manager.user_loader
@@ -36,15 +39,28 @@ def authorization():
 		if user and user.check_password(form.password.data):
 			login_user(user, remember=form.remember_me.data)
 			return redirect('/')
-		return render_template("login.html",
-			message="Неправильный логин или пароль",
-			form=form)
+		return render_template("login.html", message="Неправильный логин или пароль", form=form)
 	return render_template("login.html", form=form)
 
 
+@app.route("/register/<unique_code>", methods=["GET", "POST"])
+def registration(unique_code):
+	if not unique_codes_manager.check_code(unique_code):
+		abort(403)
+	#unique_codes_manager.update_code(unique_code)
+	form = RegisterForm()
+	if form.validate_on_submit():
+		db_sess = create_session()
+		if find_user_by_email(db_sess, form.email.data):
+			return render_template("register.html", form=form, message="Пользователь с таким адресом электронной почты уже зарегистрирован")
+		add_user(db_sess, form.name.data, form.surname.data, form.email.data, form.password.data)
+		return render_template("registered_successfully.html")
+	return render_template("register.html", form=form)
+
+
 def main():
-	app.run(host='0.0.0.0', port=4444, debug=True)
+	app.run(host="0.0.0.0", port=3838, debug=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	main()
