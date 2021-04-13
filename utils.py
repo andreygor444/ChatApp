@@ -1,7 +1,11 @@
+from sqlalchemy.orm import Session
+from typing import List
+
 from data.users import User
+from data.chats import Chat
 
 
-def add_user(db_sess, name, surname, email, password):
+def add_user(db_sess: Session, name, surname, email, password) -> None:
 	user = User()
 	user.name = name
 	user.surname = surname
@@ -11,6 +15,14 @@ def add_user(db_sess, name, surname, email, password):
 	db_sess.commit()
 
 
-def find_user_by_email(db_sess, email):
+def find_user_by_email(db_sess: Session, email) -> User:
 	user = db_sess.query(User).filter(User.email == email).first()
 	return user
+
+
+def get_user_chats(db_sess: Session, user: User) -> List[Chat]:
+	if not user.chats:
+		return []
+	user_chats_ids = set(map(lambda chat: int(chat.split(':')[0]), user.chats.split(';')))
+	user_chats = db_sess.query(Chat).filter(Chat.id.in_(user_chats_ids)).all()
+	return user_chats

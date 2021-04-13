@@ -1,10 +1,7 @@
 from flask import Flask, redirect, render_template, abort
-from flask_login import LoginManager, login_user, login_required
+from flask_login import LoginManager, login_user, login_required, current_user
 
 from data.db_session import db_session_init, create_session
-from data.users import User
-from data.chats import Chat
-from data.messages import Message
 
 from forms import *
 from utils import *
@@ -56,6 +53,18 @@ def registration(unique_code):
 		add_user(db_sess, form.name.data, form.surname.data, form.email.data, form.password.data)
 		return render_template("registered_successfully.html")
 	return render_template("register.html", form=form)
+
+
+@login_required
+@app.route("/chats")
+def chat_list():
+	db_sess = create_session()
+	user_chats = get_user_chats(db_sess, current_user)
+	user_chats.sort(key=lambda chat: chat.last_message.dispatch_date)
+	notifications = current_user.get_notifications_dict()
+	print(notifications)
+	user_chats.sort(key=lambda chat: notifications[chat.id], reverse=True)
+	return render_template("chats.html", user_chats=user_chats)
 
 
 def main():
