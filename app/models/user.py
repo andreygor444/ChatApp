@@ -17,7 +17,7 @@ class User(SqlAlchemyBase, UserMixin):
 	id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
 	name = sqlalchemy.Column(sqlalchemy.String)
 	surname = sqlalchemy.Column(sqlalchemy.String)
-	photo = sqlalchemy.Column(sqlalchemy.String, default='default.png')
+	photo = sqlalchemy.Column(sqlalchemy.String, default="default.png")
 	email = sqlalchemy.Column(sqlalchemy.String)
 	password = sqlalchemy.Column(sqlalchemy.String)
 	chats = sqlalchemy.Column(sqlalchemy.String, default='')
@@ -38,18 +38,20 @@ class User(SqlAlchemyBase, UserMixin):
 
 	def get_path_to_photo(self):
 		filename, extension = self._get_photo_filename_and_extension()
-		return f'{filename}/{filename}.{extension}'
+		return f"{filename}/{filename}.{extension}"
 
 	def get_path_to_compressed_photo(self):
 		filename, extension = self._get_photo_filename_and_extension()
-		return f'{filename}/{filename}_compressed.{extension}'
+		return f"{filename}/{filename}_compressed.{extension}"
 
 	def get_path_to_icon(self):
 		filename, extension = self._get_photo_filename_and_extension()
-		return f'{filename}/{filename}_icon.{extension}'
+		return f"{filename}/{filename}_icon.{extension}"
 
 	def get_notifications_dict(self) -> Dict[int, int]:
 		"""Возвращает словарь, в котором ключи - id чатов, а значения - количества непрочитанных сообщений"""
+		if not self.chats:
+			return {}
 		notifications_dict = {}
 		for chat in self.chats.split(';'):
 			chat_id, notifications = chat.split(':')
@@ -58,6 +60,8 @@ class User(SqlAlchemyBase, UserMixin):
 
 	def get_chat_notifications(self, chat_id: int) -> int:
 		"""Возвращает количество не прочитанных пользователем сообщений в чате"""
+		if not self.chats:
+			raise NotFoundError("User is not a member of any chat")
 		chat_id = str(chat_id)
 		for id_, notifications in map(lambda chat: chat.split(':'), self.chats.split(';')):
 			if id_ == chat_id:
