@@ -1,0 +1,249 @@
+/* COMMON */
+
+
+html, body {
+	height: 100%;
+	font-family: Ubuntu, "times new roman", times, roman, serif;
+}
+
+header {
+	width: 100%;
+	top: 0;
+	position: fixed;
+	background-color: #347da8;
+}
+
+.header-inner {
+	width: 99%;
+	margin: 0.5%;
+	background-color: #3792cb;
+	border-radius: 10px;
+	display:inline-block;
+}
+
+#app-name>h1 {
+	font-weight: 600;
+	margin-top: 5px;
+	margin-left: 30px;
+	font-size: 45px;
+}
+
+
+/* LOGIN/REGISTER PAGES */
+
+
+#login-form, #register-form {
+	width: 40%;
+	height: 80%;
+	bottom: 0;
+	position: absolute;
+	margin-left: 30%;
+	border: 5px solid #326da6;
+	border-bottom: 0px;
+	overflow: auto;
+	border-top-left-radius: 30px;
+	border-top-right-radius: 30px;
+	background-color: #2585c0;
+}
+
+.form-title {
+	margin-top: 10px;
+	font-weight: 600;
+	text-align: center;
+}
+
+#form-inner {
+	width: 60%;
+	margin-left: 20%;
+}
+
+.form-first-field {
+	margin-top: 20px;
+}
+
+.form-label {
+	text-indent: 20px;
+	font-size: 22px;
+}
+
+.remember_me-block {
+	height: 40px;
+}
+
+.remember_me-label {
+	font-size: 23px;
+	height: 50px;
+}
+
+.remember_me-checkbox {
+	width: 18px;
+	height: 18px;
+}
+
+#submit {
+	width: 100%;
+	height: 20%;
+	margin-bottom: 20px;
+	font-size: 25px;
+	background-color: #30ff30;
+	border: 3px solid #10aa10;
+	border-radius: 20px;
+}
+
+#registered-successfully>h1 {
+	font-weight: 600;
+	font-size: 70px;
+	text-align: center;
+	margin-top: 15%;
+}
+
+#redirect-to-login-page {
+	margin-top: 1%;
+}
+
+#redirect-to-login-page>a>button {
+	font-weight: 600;
+	font-size: 50px;
+	width: 30%;
+	background-color: #30ff30;
+	color: black;
+	margin-left: 35%;
+	border: 3px solid #20aa30;
+	border-radius: 20px;
+}
+
+.simplebar-scrollbar {
+	top: 20px;
+}
+
+
+/* CHAT-LIST PAGE */
+
+#user-chats {
+	width: 100%;
+	height: 100%;
+	overflow: scroll;
+}
+
+#user-chats-inner {
+	width: 60%;
+	min-height: 100%;
+	margin-left: 20%;
+	border-left: 3px solid gray;
+	border-right: 3px solid gray;
+}
+
+#user-chats-inner>h1 {
+	text-align: center;
+	font-size: 50px;
+	font-weight: 600;
+}
+
+.chat-list-title {
+	width: 50%;
+	margin-left: 25%;
+	height: 70px;
+}
+
+.fixed-position-chat-list-title {
+	width: 58%;
+	height: 70px;
+	left: 21%;
+	top: 86px;
+	margin-left: 0;
+	background-color: #ffffff;
+	position: fixed;
+	font-family: Ubuntu, "times new roman", times, roman, serif;
+}
+
+#chat-list {
+	width: 90%;
+	margin-left: 5%;
+	margin-top: 100px;
+}
+
+.chat-card {
+	margin-top: 30px;
+	border: 2px solid blue;
+	border-radius: 20px;
+	background-color: #3792cb;
+	color: #000;
+}
+
+.chat-card>a {
+	width: 100%;
+	height: 100%;
+	text-decoration: none;
+	display: block;
+	color: #000;
+}
+
+.chat-title>h3 {
+	text-align: center;
+	margin-left: 20px;
+	margin-top: 5px;
+	font-size: 1.7em;
+	font-weight: 600;
+}
+
+.last-message {
+	width: 81%;
+	border: 2px solid gray;
+	border-radius: 10px;
+	margin-left: 7%;
+	margin-bottom: 15px;
+	padding: 3px;
+	background-color: #ffffff;
+}
+
+.last-message-sender-icon>img {
+	margin-left: 7px;
+}
+
+.last-message-text {
+	width: 75%;
+	margin-left: 10px;
+	font-size: 1.5em;
+	vertical-align: middle;
+	padding-left: 20px;
+	padding-bottom: 3px;
+	background-color: #e9e9e9;
+	border: 1px solid gray;
+	border-radius: 10px;
+}
+
+.last-message-dispatch-date {
+	height: 1px;
+	float: right;
+	margin-right: 10px;
+}
+
+.last-message-dispatch-date>p {
+	text-align: right;
+	color: #303030;
+}
+
+.chat-notifications-container {
+	width: 5%;
+	height: 100%;
+	vertical-align: middle;
+}
+
+.chat-notifications {
+	width: 10px;
+	height: 36px;
+	margin-left: 60%;
+	border: 5px solid #ff0000;
+	border-radius: 18px;
+	background-color: #dd0000;
+	color: #ffffff;
+	text-align: center;
+}
+
+.chat-notifications>span {
+	vertical-align: middle;
+}
+
+.inline {
+	display: inline-block;
+}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/errors_closer.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post" id="login-form">
+        <h1 class="form-title">Авторизация</h1>
+        <div id="form-inner">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.email.label(class="form-label form-first-field") }}
+                {{ form.email(class="form-control", type="email") }}
+            </p>
+            <p>
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control", type="password") }}
+            </p>
+            <p class=remember_me-block>
+                {{ form.remember_me(class="remember_me-checkbox") }}
+                {{ form.remember_me.label(class="remember_me-label") }}
+            </p>
+            {% if message %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endif %}
+            <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        </div>
+    </form>
+{% endblock %}
