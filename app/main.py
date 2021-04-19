@@ -113,10 +113,12 @@ def add_chat_handler(name, members):
 	else:
 		members += f";{creator}"
 	chat_id = add_chat(name, members, creator)
-	path = os.path.join(PATH_TO_ROOT, "static", "img", "chat_avatars", str(chat_id))
-	os.mkdir(path)
-	load_image(request.data, f"{path}/avatar.png")
-	make_icon(request.data, f"{path}/icon.png")
+	chat_avatar = request.data
+	if chat_avatar:
+		path = os.path.join(PATH_TO_ROOT, "static", "img", "chat_avatars", str(chat_id))
+		os.mkdir(path)
+		load_image(chat_avatar, f"{path}/avatar.png")
+		make_icon(chat_avatar, f"{path}/icon.png")
 	return jsonify({"status": "ok"})
 
 
