@@ -1,5 +1,4 @@
 setTimeout ( function() {
-    var scrollbar = document.getElementsByClassName("simplebar-scrollbar")[1]
-    var scrollbar_height = Number(scrollbar.style.height.slice(0, -2))
-    scrollbar.style.height = scrollbar_height - 40+"px"
+    $(".simplebar-scrollbar").height("-=40")
+    $(".simplebar-scrollbar").css({"border-radius": "10px"})
 }, 300)

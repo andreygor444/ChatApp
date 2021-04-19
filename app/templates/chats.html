@@ -1,24 +1,39 @@
 {% extends "base.html" %}
 
+{% block head %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/cookie.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/add_chat.js') }}"></script>
+{% endblock %}
+
 {% block content %}
     <div id="user-chats">
         <div id="user-chats-inner">
-            <h1 class="chat-list-title">Мои чаты</h1>
-            <h1 class="fixed-position-chat-list-title">Мои чаты</h1>
+            <h1 class="chat-list-header">Мои чаты</h1>
+            <div class="fixed-position-chat-list-header">
+                <div class="inline chat-list-title">
+                    <h1>Мои чаты</h1>
+                </div>
+                <button class="inline btn btn-primary" id="add-chat-btn">
+                    <h2>Добавить чат</h2>
+                </button>
+            </div>
             <div id="chat-list">
                 {% for chat in user_chats %}
                     <div class="chat-card">
-                        <a href="chats/{{ chat.unique_code }}">
-                            <div class="chat-title">
-                                <h3>{{ chat.name }}</h3>
+                        <a href="chats/{{ chat.id }}" class="link-but-not-link">
+                            <div class="inline chat-avatar-container">
+                                <img width="120" height="120" class="chat-avatar" src="static/img/chat_avatars/{{ chat.id }}/icon.png" onerror="this.src = 'static/img/chat_avatars/default/icon.png'" alt="Аватар чата">
                             </div>
-                            {% set last_message = chat.last_message %}
-                            <div class="chat-card-inner">
+                            <div class="inline chat-card-info">
+                                <div class="chat-title">
+                                    <h3>{{ chat.name }}</h3>
+                                </div>
                                 <div class="inline last-message">
+                                    {% set last_message = chat.last_message %}
                                     <div class="inline last-message-sender-icon">
-                                        <img src="{{ url_for('static', filename='img/' + last_message.sender.get_path_to_icon()) }}"></img>
+                                        <img width="60" height="60" src="static/img/user_avatars/{{ last_message.sender.id }}/icon.png" onerror="this.src = 'static/img/user_avatars/default/icon.png'" alt="Фото отправителя">
                                     </div>
-                                    <div class="inline last-message-text">
+                                    <div class="inline last-message-content">
                                         {{ last_message.text }}
                                     </div>
                                     <div class="inline last-message-dispatch-date">
@@ -26,33 +41,77 @@
                                         <p>{{ dispatch_date }}<br>{{ dispatch_time }}</p>
                                     </div>
                                 </div>
-                                {% set notifications = current_user.get_chat_notifications(chat.id) %}
-                                {% if notifications %}
-                                    {% if notifications < 100 %}
-                                        {% set width = "36px" %}
-                                    {% elif notifications < 1000 %}
-                                        {% set width = "55px" %}
-                                    {% elif notifications < 10000 %}
-                                        {% set width = "60px" %}
-                                    {% elif notifications < 100000 %}
-                                        {% set width = "70px" %}
-                                    {% elif notifications < 1000000 %}
-                                        {% set width = "85px" %}
-                                    {% else %}
-                                        {% set width = "100px" %}
-                                    {% endif %}
-                                    <div class="inline chat-notifications-container">
-                                        <div style="width: {{ width }};" class="chat-notifications">
-                                            <span>{{ notifications }}</span>
-                                        </div>
-                                    </div>
-                                {% endif %}
                             </div>
+                            {% set notifications = current_user.get_chat_notifications(chat.id) %}
+                            {% if notifications %}
+                                {% if notifications < 100 %}
+                                    {% set width = "36px" %}
+                                {% elif notifications < 1000 %}
+                                    {% set width = "55px" %}
+                                {% elif notifications < 10000 %}
+                                    {% set width = "60px" %}
+                                {% elif notifications < 100000 %}
+                                    {% set width = "70px" %}
+                                {% elif notifications < 1000000 %}
+                                    {% set width = "85px" %}
+                                {% else %}
+                                    {% set width = "100px" %}
+                                {% endif %}
+                                <div class="inline chat-notifications-container">
+                                    <div style="width: {{ width }};" class="chat-notifications">
+                                        <span>{{ notifications }}</span>
+                                    </div>
+                                </div>
+                            {% endif %}
                         </a>
                     </div>
                 {% endfor %}
                 <br>
             </div>
+        </div>
+    </div>
+
+    <div id="add-chat-window">
+        <div id="add-chat-window-inner">
+            <div id=add-chat-window-header>
+                <div class="inline" id="add-chat-window-title">
+                    <h1>Добавление чата</h1>
+                </div>
+                <div class="inline" id="close-add-chat-window-btn-container">
+                    <button class="btn close-btn" id="close-add-chat-window-btn"></button>
+                </div>
+            </div>
+            <div id="new-chat-data-input">
+                <div class="inline" id="new-chat-avatar">
+                    <label for="new-chat-avatar-loader">
+                        <img width="200" height="200" id="new-chat-avatar-img" src="static/img/chat_avatars/default/icon.png" alt="Аватар чата">
+                    </label>
+                    <input type="file" id="new-chat-avatar-loader" onchange="loadFile(this.files[0])">
+                </div>
+                <button id="reset-new-chat-avatar-btn" class="btn close-btn"></button>
+                <div class="inline" id="new-chat-name">
+                    <input id="new-chat-name-input" type="text" placeholder="Название чата">
+                </div>
+            </div>
+            <div id="new-chat-members-list-block">
+                <h2>Участники</h2>
+                <div id="new-chat-members-list">
+                    <button class="inline btn btn-primary" id="add-chat-member-btn">Добавить участника</button>
+                </div>
+            </div>
+            <button class="btn btn-success" id="apply-adding-chat-btn">Добавить</button>
+        </div>
+    </div>
+
+    <div id="search-member-window">
+        <div id="search-member-window-inner">
+            <div>
+                <button class="btn close-btn" id="close-search-member-window-btn"></button>
+            </div>
+            <div id="new-chat-member-name">
+                <input id="new-chat-member-name-input" type="text" placeholder="Имя/id участника">
+            </div>
+            <div id="new-chat-member-search-prompt"></div>
         </div>
     </div>
 {% endblock %}

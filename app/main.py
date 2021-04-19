@@ -1,26 +1,24 @@
-from flask import Flask, redirect, render_template, abort
+from flask import Flask, request, redirect, render_template, jsonify, abort
 from flask_login import LoginManager, login_user, login_required, current_user
-import inspect
-import os
 
-from db_session import db_session_init, create_session
+from db_session import db_session_init
 from unique_codes_manager import UniqueCodesManager
-from forms import *
+from temporary_chat_avatars_manager import TemporaryChatAvatarsManager
+from config import *
 from utils import *
+from forms import *
 
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "workout"
 
-current_file = inspect.getframeinfo(inspect.currentframe()).filename
-path_to_current_file = os.path.dirname(os.path.abspath(current_file))
-path_to_db = os.path.join(path_to_current_file, "db/main.db")
-db_session_init(path_to_db)
+db_session_init(PATH_TO_DB)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 unique_codes_manager = UniqueCodesManager()
 unique_codes_manager.generate_unique_codes(10)
+temporary_chat_avatars_manager = TemporaryChatAvatarsManager()
 
 
 @login_manager.user_loader
@@ -38,7 +36,7 @@ def home_page():
 def authorization():
 	form = LoginForm()
 	if form.validate_on_submit():
-		user = find_user_by_email(create_session(), form.email.data)
+		user = find_user_by_email(form.email.data)
 		if user and user.check_password(form.password.data):
 			login_user(user, remember=form.remember_me.data)
 			return redirect('/')
@@ -54,9 +52,13 @@ def registration(unique_code):
 	form = RegisterForm()
 	if form.validate_on_submit():
 		db_sess = create_session()
-		if find_user_by_email(db_sess, form.email.data):
-			return render_template("register.html", form=form, message="Пользователь с таким адресом электронной почты уже зарегистрирован")
-		add_user(db_sess, form.name.data, form.surname.data, form.email.data, form.password.data)
+		if find_user_by_email(form.email.data, session=db_sess):
+			return render_template(
+				"register.html",
+				form=form,
+				message="Пользователь с таким адресом электронной почты уже зарегистрирован"
+			)
+		add_user(form.name.data, form.surname.data, form.email.data, form.password.data, db_sess)
 		return render_template("registered_successfully.html")
 	return render_template("register.html", form=form)
 
@@ -65,12 +67,50 @@ def registration(unique_code):
 @app.route("/chats")
 def chat_list():
 	db_sess = create_session()
-	user_chats = get_user_chats(db_sess, current_user)
+	user_chats = get_user_chats(current_user, session=db_sess)
 	user_chats.sort(key=lambda chat: chat.last_message.dispatch_date)
 	notifications = current_user.get_notifications_dict()
-	print(notifications)
 	user_chats.sort(key=lambda chat: notifications[chat.id], reverse=True)
 	return render_template("chats.html", user_chats=user_chats)
+
+
+@app.route("/js/load_temporary_chat_avatar", methods=["PUT"])
+def load_temporary_chat_avatar():
+	return temporary_chat_avatars_manager.load_avatar(request.data)
+
+
+@app.route("/js/find_user_helper/<user_input>")
+def find_user_helper(user_input: str) -> List[User]:
+	"""Вызывается когда пользователь ищет другого пользователя,
+	принимает те данные, которые ввёл пользователь в поле поиска
+	и выдаёт всех пользователей, у которых имя/фамилия/id
+	схожи с тем что было введено
+	:param user_input: Данные, введённые пользователем
+	:returns: Все пользователи, подходящие под запрос
+	"""
+	db_sess = create_session()
+	found_users = set()
+	for word in user_input.split():
+		if word.isdigit():
+			found_users.update(find_users_with_id_like(int(word), session=db_sess))
+		else:
+			found_users.update(find_users_with_name_like(word, session=db_sess))
+			found_users.update(find_users_with_surname_like(word, session=db_sess))
+	found_users = sorted(found_users, key=lambda user: user.name)
+	return jsonify(
+		[user.to_dict(only=("id", "name", "surname")) for user in found_users]
+	)
+
+
+@app.route("/js/add_chat/<name>/<members>", methods=["POST"])
+def add_chat_handler(name, members):
+	creator = current_user.id
+	chat_id = add_chat(name, members, creator)
+	path = os.path.join(PATH_TO_ROOT, "static", "img", "chat_avatars", str(chat_id))
+	os.mkdir(path)
+	load_image(request.data, f"{path}/avatar.png")
+	make_icon(request.data, f"{path}/icon.png")
+	return jsonify({"status": "ok"})
 
 
 def main():
