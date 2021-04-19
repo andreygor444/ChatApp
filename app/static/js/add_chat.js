@@ -9,7 +9,7 @@ function makeFoundMemberBlock(memberName, memberSurname, memberId, prompt) {
     prompt.append(
         `<div class="new-chat-member-variant">
             <div class="inline new-chat-member-variant-avatar-container">
-                <img width="40" height="40" src="static/img/${memberId}/icon.png" class="new-chat-member-variant-avatar" onerror="this.src = 'static/img/user_avatars/default/icon.png'">
+                <img width="40" height="40" src="static/img/user_avatars/${memberId}/icon.png" class="new-chat-member-variant-avatar" onerror="this.src = 'static/img/user_avatars/default/icon.png'">
             </div>
             <div class="inline new-chat-member-variant-info">
                 <p>${memberName} ${memberSurname}</p>
@@ -169,15 +169,15 @@ function addMemberToNewChat(memberName, memberSurname, memberId) {
 }
 
 function addChat() {
-    closeAllWindows()
-    clearAllWindows()
-    console.log({
-        name: $("#new-chat-name-input").val(),
-        members: 'FIXME',
-        avatar: $("#new-chat-avatar-loader").prop("files")[0],
-        creator: 'FIXME'
-    })
     chatName = $("#new-chat-name-input").val()
+    if (!chatName) {
+        $("#new-chat-name-input").css({"color": "red", "border-color": "red"})
+        return
+    }
+    closeAllWindows()
+    if (newChatMemberIds.length == 0) {
+        newChatMemberIds.push("none")
+    } 
     $.ajax({
         url: `/js/add_chat/${chatName}/${newChatMemberIds.join(";")}`,
         method: "POST",
@@ -185,6 +185,7 @@ function addChat() {
         contentType: false,
         processData: false,
     })
+    clearAllWindows()
 }
 
 function resetNewChatAvatar() {
@@ -216,10 +217,14 @@ function closeAllWindows() {
 }
 
 $(document).ready(function() {
-    console.log($.cookie())
     // Установка правильной ширины поля ввода названия чата
     width = Number($("#new-chat-data-input").css("width").slice(0, -2))-270+"px"
     $("#new-chat-name").css({"width": width})
+    // Бинд полей ввода
+    $("#new-chat-name-input").on("paste keyup", function() {
+        $(this).css({"color": "#000", "border-color": "gray"})
+    })
+    $("#new-chat-member-name-input").on("paste keyup", searchMember)
     // Бинд кнопок
     $("#add-chat-btn").click(function() {
         $("#add-chat-window").css({"visibility": "visible"})
@@ -228,7 +233,10 @@ $(document).ready(function() {
         }
     })
 
-    $("#close-add-chat-window-btn").click(closeAllWindows)
+    $("#close-add-chat-window-btn").click(function() {
+        $("#new-chat-name-input").css({"color": "#000", "border-color": "gray"})
+        closeAllWindows()
+    })
     
     $("#reset-new-chat-avatar-btn").click(resetNewChatAvatar)
 
@@ -241,6 +249,4 @@ $(document).ready(function() {
     $("#close-search-member-window-btn").click(function () {
         $("#search-member-window").css({"visibility": "hidden"})
     })
-
-    $("#new-chat-member-name-input").on("paste keyup", searchMember)
 })

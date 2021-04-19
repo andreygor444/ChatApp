@@ -97,6 +97,8 @@ def find_user_helper(user_input: str) -> List[User]:
 			found_users.update(find_users_with_name_like(word, session=db_sess))
 			found_users.update(find_users_with_surname_like(word, session=db_sess))
 	found_users = sorted(found_users, key=lambda user: user.name)
+	if current_user in found_users:
+		found_users.remove(current_user)
 	return jsonify(
 		[user.to_dict(only=("id", "name", "surname")) for user in found_users]
 	)
@@ -104,7 +106,12 @@ def find_user_helper(user_input: str) -> List[User]:
 
 @app.route("/js/add_chat/<name>/<members>", methods=["POST"])
 def add_chat_handler(name, members):
+	"""Создаёт чат"""
 	creator = current_user.id
+	if members == "none":
+		members = str(creator)
+	else:
+		members += f";{creator}"
 	chat_id = add_chat(name, members, creator)
 	path = os.path.join(PATH_TO_ROOT, "static", "img", "chat_avatars", str(chat_id))
 	os.mkdir(path)
