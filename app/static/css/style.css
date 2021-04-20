@@ -530,3 +530,52 @@ header {
 	height: 20px;
 	margin-bottom: 5px;
 }
+
+#profile-window {
+	width: 50%;
+	height: 40%;
+	top: 20%;
+	left: 24.7%;
+	border: 3px solid gray;
+	border-radius: 10px;
+	background-color: #347da8;
+	visibility: visible;
+	position: fixed;
+}
+
+#profile-title {
+	width: 80%;
+	padding-left: 20%;
+	text-align: center;
+}
+
+#profile-header {
+	width: 100%;
+}
+
+#profile-inner {
+	width: 96%;
+	height: 96%;
+	margin-left: 2%;
+	margin-top: 1.3%;
+	border-radius: 15px;
+	background-color: #ffffff;
+}
+
+#button-change-profile-block {
+	width: 80%;
+	margin-left: 10%;
+	margin-top: 20px;
+}
+
+#line_bio {
+	border: none;
+	border-bottom: 2px solid gray;
+	font-size: 2em;
+	outline: none;
+}
+
+#profile-data-input {
+	width: 90%;
+	margin-left: 5%;
+}

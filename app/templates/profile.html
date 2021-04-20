@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/cookie.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/add_chat.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="profile-window">
+        <div id="profile-inner">
+            <div id=profile-header>
+                <div class="inline" id="profile-title">
+                    <h1>Данные о профиле</h1>
+                </div>
+            </div>
+            <div id="profile-data-input">
+                <div class="inline" id="new-chat-avatar">
+                    <label for="new-chat-avatar-loader">
+                        <img width="200" height="200" id="new-chat-avatar-img" src="{{user.photo}}"  alt="Аватар пользователя">
+                    </label>
+                    <input type="file" id="new-chat-avatar-loader" onchange="loadFile(this.files[0])">
+                </div>
+                <button id="reset-new-chat-avatar-btn" class="btn close-btn"></button>
+                <div class="inline">
+                    <div id="new-chat-name">
+                        <input id="line_bio" type="text" value="{{user.name}}" placeholder="Имя">
+                    </div>
+                    <div id="new-chat-name">
+                        <input id="line_bio" type="text" value="{{user.surname}}" placeholder="Фамилия">
+                    </div>
+                </div>
+            </div>
+            <div id="button-change-profile-block">
+                <div id="new-chat-members-list">
+                    <button class="inline btn btn-primary" id="change-button-profile">Изменить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
