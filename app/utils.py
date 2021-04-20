@@ -8,6 +8,8 @@ from typing import List, Union, Optional, Iterable
 from db_session import create_session
 from models.user import User
 from models.chat import Chat
+from models.message import Message
+from config import FIRST_CHAT_MESSAGE_TEXT
 
 
 def async_procedure(func):
@@ -81,7 +83,20 @@ def add_chat(name: str, members: Union[Iterable[str], str], creator_id: int, ses
 	return chat.id
 
 
-def find_user_by_email(email, session: Optional[Session] = None) -> User:
+def write_first_chat_message(chat_id: int, user_id: int, session: Optional[Session] = None) -> None:
+	if session is None:
+		session = create_session()
+	message = Message()
+	message.sender_id = user_id
+	message.text = FIRST_CHAT_MESSAGE_TEXT
+	message.chat_id = chat_id
+	session.add(message)
+	session.commit()
+	session.query(Chat).filter(Chat.id == chat_id).update({"last_message_id": message.id})
+	session.commit()
+
+
+def find_user_by_email(email: str, session: Optional[Session] = None) -> User:
 	if session is None:
 		session = create_session()
 	user = session.query(User).filter(User.email == email).first()
@@ -117,3 +132,12 @@ def find_users_with_surname_like(surname_fragment: str, session: Optional[Sessio
 	if session is None:
 		session = create_session()
 	return session.query(User).filter(User.surname.ilike(f"%{surname_fragment}%")).all()
+
+def add_chat_to_user_chat_list(chat_id: int, user_id: int, session: Optional[Session] = None) -> None:
+	if session is None:
+		session = create_session()
+	user = session.query(User).filter(User.id == user_id).first()
+	if user.chats:
+		user.chats += ';'
+	user.chats += f"{chat_id}:1"
+	session.commit()

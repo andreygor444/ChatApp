@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, render_template, jsonify, abort
 from flask_login import LoginManager, login_user, login_required, current_user
+from datetime import timedelta
 
 from db_session import db_session_init
 from unique_codes_manager import UniqueCodesManager
@@ -11,6 +12,7 @@ from forms import *
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "workout"
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=365)
 
 db_session_init(PATH_TO_DB)
 
@@ -68,7 +70,7 @@ def registration(unique_code):
 def chat_list():
 	db_sess = create_session()
 	user_chats = get_user_chats(current_user, session=db_sess)
-	user_chats.sort(key=lambda chat: chat.last_message.dispatch_date)
+	user_chats.sort(key=lambda chat: chat.last_message.dispatch_date, reverse=True)
 	notifications = current_user.get_notifications_dict()
 	user_chats.sort(key=lambda chat: notifications[chat.id], reverse=True)
 	return render_template("chats.html", user_chats=user_chats)
@@ -112,14 +114,23 @@ def add_chat_handler(name, members):
 		members = str(creator)
 	else:
 		members += f";{creator}"
-	chat_id = add_chat(name, members, creator)
+	session = create_session()
+	chat_id = add_chat(name, members, creator, session=session)
+	write_first_chat_message(chat_id, current_user.id, session=session)
 	chat_avatar = request.data
 	if chat_avatar:
 		path = os.path.join(PATH_TO_ROOT, "static", "img", "chat_avatars", str(chat_id))
 		os.mkdir(path)
 		load_image(chat_avatar, f"{path}/avatar.png")
 		make_icon(chat_avatar, f"{path}/icon.png")
-	return jsonify({"status": "ok"})
+	for user_id in map(int, members.split(';')):
+		add_chat_to_user_chat_list(chat_id, user_id, session=session)
+	return jsonify({
+		"status": "ok",
+		"chat_id": chat_id,
+		"creator_id": current_user.id,
+		"first_message_text": FIRST_CHAT_MESSAGE_TEXT
+	})
 
 
 def main():

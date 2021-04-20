@@ -52,6 +52,42 @@ function makeRemoveMemberButton(bottomIndent, memberId) {
     )
 }
 
+function makeNewChat(chatName, chatId, creatorId, firstMessageText) {
+    /**
+     * Добавляет на страницу только что созданный чат
+     */
+    date = new Date()
+    createDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+    createTime = `${date.getHours()}:${date.getMinutes()}`
+    chat = `<div class="chat-card">
+                <a href="chats/{{ chat.id }}" class="link-but-not-link">
+                    <div class="inline chat-avatar-container">
+                        <img width="120" height="120" class="chat-avatar" src="static/img/chat_avatars/${chatId}/icon.png" onerror="this.src = 'static/img/chat_avatars/default/icon.png'" alt="Аватар чата">
+                    </div>
+                    <div class="inline chat-card-info">
+                        <div class="chat-title">
+                            <h3>${chatName}</h3>
+                        </div>
+                        <div class="inline last-message">
+                            <div class="inline last-message-sender-icon">
+                                <img width="60" height="60" src="static/img/user_avatars/${creatorId}/icon.png" onerror="this.src = 'static/img/user_avatars/default/icon.png'" alt="Фото отправителя">
+                            </div>
+                            <div class="inline last-message-content">${firstMessageText}</div>
+                            <div class="inline last-message-dispatch-date">
+                                <p>${createDate}<br>${createTime}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline chat-notifications-container">
+                        <div style="width: 36px;" class="chat-notifications">
+                            <span>1</span>
+                        </div>
+                    </div>
+                </a>
+            </div>`
+    $("#chat-list").prepend(chat)
+}
+
 function validateAvatar(avatar) {
     /**
      * Проверяет корректность расширения загруженного в качастве аватара файла
@@ -177,13 +213,16 @@ function addChat() {
     closeAllWindows()
     if (newChatMemberIds.length == 0) {
         newChatMemberIds.push("none")
-    } 
+    }
     $.ajax({
         url: `/js/add_chat/${chatName}/${newChatMemberIds.join(";")}`,
         method: "POST",
         data: $("#new-chat-avatar-loader").prop("files")[0],
         contentType: false,
         processData: false,
+        success: function(json) {
+            makeNewChat(chatName, json.chat_id, json.creator_id, json.first_message_text)
+        }
     })
     clearAllWindows()
 }

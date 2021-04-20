@@ -42,6 +42,7 @@ header {
 	top: 0;
 	position: fixed;
 	background-color: #347da8;
+	z-index: 1;
 }
 
 .header-inner {
@@ -186,6 +187,7 @@ header {
 	background-color: #ffffff;
 	position: fixed;
 	font-weight: 600;
+	z-index: 1;
 }
 
 .chat-list-title {
@@ -222,6 +224,10 @@ header {
 	border-radius: 20px;
 	background-color: #3792cb;
 	color: #000;
+}
+
+.chat-card:hover {
+	opacity: 0.9;
 }
 
 .chat-avatar-container {
