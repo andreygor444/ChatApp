@@ -13,28 +13,30 @@
                     <h1>Данные о профиле</h1>
                 </div>
             </div>
-            <div id="profile-data-input">
-                <div class="inline" id="new-chat-avatar">
-                    <label for="new-chat-avatar-loader">
-                        <img width="200" height="200" id="new-chat-avatar-img" src="{{user.photo}}"  alt="Аватар пользователя">
-                    </label>
-                    <input type="file" id="new-chat-avatar-loader" onchange="loadFile(this.files[0])">
-                </div>
-                <button id="reset-new-chat-avatar-btn" class="btn close-btn"></button>
-                <div class="inline">
-                    <div id="new-chat-name">
-                        <input id="line_bio" type="text" value="{{user.name}}" placeholder="Имя">
+            <form method="post" enctype="multipart/form-data">
+                <div id="profile-data-input">
+                    <div class="inline" id="new-chat-avatar">
+                        <label for="new-chat-avatar-loader">
+                            <img width="200" height="200" id="new-chat-avatar-img" src="{{user.photo}}"  alt="Аватар пользователя">
+                        </label>
+                        <input type="file" name="file" id="new-chat-avatar-loader" onchange="loadFile(this.files[0])">
                     </div>
-                    <div id="new-chat-name">
-                        <input id="line_bio" type="text" value="{{user.surname}}" placeholder="Фамилия">
+                    <button type="button" id="reset-new-chat-avatar-btn" class="btn close-btn"></button>
+                    <div class="inline">
+                        <div id="new-chat-name">
+                            <input id="line_bio" name="name" type="text" value="{{user.name}}" placeholder="Имя">
+                        </div>
+                        <div id="new-chat-name">
+                            <input id="line_bio" name="surname" type="text" value="{{user.surname}}" placeholder="Фамилия">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div id="button-change-profile-block">
-                <div id="new-chat-members-list">
-                    <button class="inline btn btn-primary" id="change-button-profile">Изменить</button>
+                <div id="button-change-profile-block">
+                    <div id="new-chat-members-list">
+                        <button class="inline btn btn-primary" id="change-button-profile">Изменить</button>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 {% endblock %}

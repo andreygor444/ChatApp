@@ -4,6 +4,7 @@ from threading import Thread
 from PIL import Image
 from io import BytesIO
 from typing import List, Union, Optional, Iterable
+from os import path, mkdir
 
 from db_session import create_session
 from models.user import User
@@ -64,6 +65,20 @@ def add_user(name, surname, email, password, session: Optional[Session] = None) 
 	session.add(user)
 	session.commit()
 	return user.id
+
+
+def change_user_in_profile(user, name, surname, photo):
+	session = create_session()
+	ch_user = session.query(User).filter(User.id == user.id).first()
+	ch_user.name = name
+	ch_user.surname = surname
+	if photo.filename != '':
+		if not path.isdir('static/img/user_avatars/' + str(ch_user.id)):
+			mkdir('static/img/user_avatars/' + str(ch_user.id))
+		path_todir = 'static/img/user_avatars/' + str(ch_user.id) + '/'
+		load_image(photo.read(), path_todir + 'avatar.png')
+		make_icon(photo, path_todir + 'icon.png')
+	session.commit()
 
 
 def add_chat(name: str, members: Union[Iterable[str], str], creator_id: int, session: Optional[Session] = None) -> int:

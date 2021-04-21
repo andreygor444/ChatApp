@@ -75,17 +75,24 @@ def chat_list():
 
 
 @login_required
-@app.route("/profile")
+@app.route("/profile", methods=['POST', 'GET'])
 def profile():
-    photo = 'static/img/chat_avatars/default/icon.png'
-    if os.path.isfile('static/img/user_avatars/' + str(current_user.id) + '/icon'):
-        photo = f'static/img/chat_avatars/{str(current_user.id)}/icon.png'
-    user = {
-        'photo': photo,
-        'name': current_user.name,
-        'surname': current_user.surname
-    }
-    return render_template("profile.html", user=user)
+    if request.method == 'GET':
+        photo = 'static/img/chat_avatars/default/icon.png'
+        if os.path.isfile('static/img/user_avatars/' + str(current_user.id) + '/avatar.png'):
+            photo = f'static/img/chat_avatars/{str(current_user.id)}/avatar.png'
+        user = {
+            'photo': photo,
+            'name': current_user.name,
+            'surname': current_user.surname
+        }
+        return render_template("profile.html", user=user)
+    elif request.method == 'POST':
+        name = request.form.get('name')
+        surname = request.form.get('surname')
+        file = request.files.get('file')
+        change_user_in_profile(current_user, name, surname, file)
+        return redirect('/profile')
 
 
 @app.route("/js/load_temporary_chat_avatar", methods=["PUT"])
@@ -137,7 +144,7 @@ def add_chat_handler(name, members):
 
 
 def main():
-    app.run(host="0.0.0.0", port=3838, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)
 
 
 if __name__ == "__main__":
