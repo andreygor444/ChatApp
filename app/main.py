@@ -78,9 +78,9 @@ def chat_list():
 @app.route("/profile", methods=['POST', 'GET'])
 def profile():
     if request.method == 'GET':
-        photo = 'static/img/chat_avatars/default/icon.png'
+        photo = os.path.join(PATH_TO_ROOT, 'static/img/chat_avatars/default/avatar.png')
         if os.path.isfile('static/img/user_avatars/' + str(current_user.id) + '/avatar.png'):
-            photo = f'static/img/chat_avatars/{str(current_user.id)}/avatar.png'
+            photo = os.path.join(PATH_TO_ROOT, 'static', 'img', 'chat_avatars', str(current_user.id), 'avatar.png')
         user = {
             'photo': photo,
             'name': current_user.name,
