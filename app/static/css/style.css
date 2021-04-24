@@ -34,6 +34,14 @@ html, body {
 	color: #000;
 }
 
+#main-content {
+	width: 60%;
+	min-height: 100%;
+	margin-left: 20%;
+	border-left: 3px solid gray;
+	border-right: 3px solid gray;
+}
+
 /* HEADER */
 
 
@@ -158,15 +166,7 @@ header {
 	overflow: scroll;
 }
 
-#user-chats-inner {
-	width: 60%;
-	min-height: 100%;
-	margin-left: 20%;
-	border-left: 3px solid gray;
-	border-right: 3px solid gray;
-}
-
-#user-chats-inner>h1 {
+#main-content>h1 {
 	text-align: center;
 	font-size: 50px;
 	font-weight: 600;
@@ -333,10 +333,6 @@ header {
 	position: fixed;
 }
 
-#add-chat-window-header {
-	width: 100%;
-}
-
 #add-chat-window-title {
 	width: 80%;
 	padding-left: 20%;
@@ -431,7 +427,6 @@ header {
 	color: #ffffff;
 	background-color: #000;
 	opacity: 0.8;
-	visibility: hidden;
 }
 
 .delete-member-btn {
@@ -535,4 +530,101 @@ header {
 .new-chat-member-variant-info>p {
 	height: 20px;
 	margin-bottom: 5px;
+}
+
+
+/* CHAT PAGE */
+
+
+#chat {
+	width: 100%;
+	height: 100%;
+}
+
+#chat-header {
+	padding-top: 8px;
+	padding-bottom: 1px;
+	background-color: #326da6;
+}
+
+#chat-header-inner {
+	margin-left: 8px;
+	margin-right: 8px;
+	border-radius: 10px;
+	background-color: #3792cb;
+}
+
+#chat-header-inner>h2 {
+	padding: 5px;
+	text-align: center;
+	font-weight: 600;
+}
+
+#chat-message-list {
+	overflow: auto;
+}
+
+.chat-message {
+	margin-top: 10px;
+	margin-left: 10px;
+}
+
+.my-message {
+	float: right;
+}
+
+.my-message-sender {
+	float: right;
+	margin-left: 10px;
+}
+
+.not-my-message {
+	float: left;
+}
+
+.not-my-message-sender {
+	float: left;
+	margin-right: 10px;
+}
+
+.chat-message>div>p {
+	max-width: 70%;
+	padding: 10px;
+	border: 2px solid gray;
+	border-radius: 10px;
+	background-color: #add8e6;
+}
+
+#chat-message-input-container {
+	width: 60%;
+	position: absolute;
+	bottom: 0;
+	border-top: 3px solid gray;
+	background-color: #326da6;
+}
+
+#chat-message-input-container-inner{
+	margin-left: 170px;
+	margin-right: 170px;
+	margin-top: 7px;
+	margin-bottom: 7px;
+	border-radius: 7px;
+	background-color: #3792cb;
+}
+
+#chat-message-input {
+	margin-left: 20px;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding-bottom: 3px;
+	font-size: 1.5em;
+}
+
+#send-message-btn {
+	width: 40px;
+	height: 40px;
+	margin-bottom: 8px;
+	border-radius: 25px;
+	background: url(../img/send_message_button.png);
 }

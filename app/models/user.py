@@ -51,14 +51,12 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
 		raise NotFoundError("User is not a member of this chat")
 
 	def add_chat_notification(self, chat: Chat) -> None:
-		"""Добавляет к чату в списке чатов пользователя оповещение о непрочитанном сообщении,
-		если пользователь в данный момент не читает этот чат"""
-		if self.id not in chat.current_viewers:
-			chats = self.chats.split(';')
-			chat_id = chat.id
-			for i in range(len(chats)):
-				id_, unreaded_messages = map(int, chats[i].split(':'))
-				if id_ == chat_id:
-					chats[i] = f"{id_}:{unreaded_messages + 1}"
-					self.chats = ';'.join(chats)
-					return
+		"""Добавляет к чату в списке чатов пользователя оповещение о непрочитанном сообщении"""
+		chats = self.chats.split(';')
+		chat_id = chat.id
+		for i in range(len(chats)):
+			id_, unread_messages = map(int, chats[i].split(':'))
+			if id_ == chat_id:
+				chats[i] = f"{id_}:{unread_messages + 1}"
+				self.chats = ';'.join(chats)
+				return

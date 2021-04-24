@@ -19,6 +19,9 @@ class UniqueCodesManager:
             code = ''.join(choice(self._code_symbols) for _ in range(self._code_length))
             self._codes.add(code)
     
+    def get_unique_code(self):
+        return tuple(self._codes)[0]
+    
     def update_code(self, code):
         self._codes.remove(code)
         self.generate_unique_codes(1)

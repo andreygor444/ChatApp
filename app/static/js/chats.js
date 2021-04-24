@@ -2,6 +2,57 @@ var counter = 0  // Нужен чтобы изображения не кэшир
 const validAvatarExtensions = [".png", ".jpg", ".jpeg", ".webp", ".ico", ".gif"]
 var newChatMemberIds = []  // Id пользователей, которые при создании нового чата будут добавлены в него
 
+function checkNewMessages() {
+    $.ajax({
+        url: `/js/get_chats_with_unread_messages`,
+        method: "GET",
+        success: function(chats) {
+            for (var chatId in chats) {
+                const chat = $(`#chat-card-${chatId}`)
+                chat.prependTo("#chat-list")
+                const notifications = chat.find(".chat-notifications-container")
+                if (notifications) {
+                    notifications.remove()
+                }
+                const unreadMessages = chats[chatId].notifications
+                var notificationsWidth
+                switch (true) {
+                    case unreadMessages<100:
+                        notificationsWidth = 36
+                        break
+                    case unreadMessages<1000:
+                        notificationsWidth = 55
+                        break
+                    case unreadMessages<10000:
+                        notificationsWidth = 60
+                        break
+                    case unreadMessages<100000:
+                        notificationsWidth = 70
+                        break
+                    case unreadMessages<1000000:
+                        notificationsWidth = 85
+                        break
+                    case unreadMessages<10000000:
+                        notificationsWidth = 100
+                        break
+                }
+                chat.find("a").append(`<div class="inline chat-notifications-container">
+                                           <div style="width: ${notificationsWidth}px;" class="chat-notifications">
+                                               <span>${unreadMessages}</span>
+                                           </div>
+                                       </div>`)
+                chat.find(".last-message-content").text(chats[chatId].last_message.text)
+                chat.find(".last-message-sender-icon").attr("src", `static/img/user_avatars/${chats[chatId].last_message.sender_id}/icon.png`)
+                const dispatchDateTime = chats[chatId].last_message.dispatch_date
+                const dispatchDate = dispatchDateTime.split(' ')[0]
+                const dispatchTime = dispatchDateTime.split(' ')[1].slice(0, 5)
+                chat.find(".last-message-dispatch-date>p").remove()
+                chat.find(".last-message-dispatch-date").append(`<p>${dispatchDate}<br>${dispatchTime}</p>`)
+            }
+        }
+    })
+}
+
 function makeFoundMemberBlock(memberName, memberSurname, memberId, prompt) {
     /**
      * Добавляет блок найденного пользователя при поиске участника когда создаёшь новый чат
@@ -28,18 +79,6 @@ function makeNewChatMember(memberId) {
     )
 }
 
-function makeHoverMemberNamePlate(bottomIndent, memberName, memberSurname, memberId) {
-    /**
-     * Добавляет на страницу небольшую табличку с именем и фамилией,
-     * которая будет появляться при наведении курсора на иконку участника чата
-     */
-    $("body").append(
-        `<div class="hover-chat-member-nameplate" id="chat-member-nameplate-${memberId}" style="bottom: ${bottomIndent}px">
-            ${memberName} ${memberSurname}
-        </div>`
-    )
-}
-
 function makeRemoveMemberButton(bottomIndent, memberId) {
     /**
      * Добавляет на страницу кнопку удаления участника из создаваемого чата,
@@ -59,10 +98,10 @@ function makeNewChat(chatName, chatId, creatorId, firstMessageText) {
     date = new Date()
     createDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
     createTime = `${date.getHours()}:${date.getMinutes()}`
-    chat = `<div class="chat-card">
-                <a href="chats/{{ chat.id }}" class="link-but-not-link">
+    chat = `<div class="chat-card" id="chat-card-${chatId}">
+                <a href="chats/${chatId}" class="link-but-not-link">
                     <div class="inline chat-avatar-container">
-                        <img width="120" height="120" class="chat-avatar" src="static/img/chat_avatars/${chatId}/icon.png" onerror="this.src = 'static/img/chat_avatars/default/icon.png'" alt="Аватар чата">
+                        <img width="120" height="120" class="chat-avatar" src="static/img/chat_avatars/${chatId}/icon.png" onerror="this.src = 'static/img/chat_avatars/default/icon.png'">
                     </div>
                     <div class="inline chat-card-info">
                         <div class="chat-title">
@@ -70,7 +109,7 @@ function makeNewChat(chatName, chatId, creatorId, firstMessageText) {
                         </div>
                         <div class="inline last-message">
                             <div class="inline last-message-sender-icon">
-                                <img width="60" height="60" src="static/img/user_avatars/${creatorId}/icon.png" onerror="this.src = 'static/img/user_avatars/default/icon.png'" alt="Фото отправителя">
+                                <img width="60" height="60" src="static/img/user_avatars/${creatorId}/icon.png" onerror="this.src = 'static/img/user_avatars/default/icon.png'">
                             </div>
                             <div class="inline last-message-content">${firstMessageText}</div>
                             <div class="inline last-message-dispatch-date">
@@ -169,7 +208,8 @@ function addMemberToNewChat(memberName, memberSurname, memberId) {
     }
     const bottomIndent = window.innerHeight-member.offset().top
     // Создание всплывающей таблицы с именем и фамилией добавленного участника
-    makeHoverMemberNamePlate(bottomIndent+5, memberName, memberSurname, memberId)
+    makeHoverMemberNamePlate(0, bottomIndent+5, memberName, memberSurname, memberId)
+    $(`#chat-member-nameplate-${memberId}`).css({"visibility": "hidden"})
     // Создание кнопки удаления добавленного участника
     makeRemoveMemberButton(bottomIndent-10, memberId)
     // Бинд кнопки удаления добавленного участника
@@ -197,8 +237,7 @@ function addMemberToNewChat(memberName, memberSurname, memberId) {
     .mouseleave(function() {
         const delBtn = $(`#delete-member-${memberId}-from-new-chat-btn`)
         if (!delBtn.is(":hover")) {
-            const namePlate = $(`#chat-member-nameplate-${memberId}`)
-            namePlate.css({"visibility": "hidden"})
+            $(`#chat-member-nameplate-${memberId}`).css({"visibility": "hidden"})
             delBtn.css({"visibility": "hidden"})
         }
     })
@@ -288,4 +327,6 @@ $(document).ready(function() {
     $("#close-search-member-window-btn").click(function () {
         $("#search-member-window").css({"visibility": "hidden"})
     })
+
+    setInterval(checkNewMessages, 1000)
 })

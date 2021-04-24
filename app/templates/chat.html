@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/chat_member_hover_nameplates.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="chat">
+        <div id="main-content">
+            <div id="chat-header">
+                <div id="chat-header-inner">
+                    <h2>{{ chat.name }}</h2>
+                </div>
+            </div>
+            <div id="chat-message-list">
+                {% for message in messages %}
+                    <div class="chat-message">
+                        <div>
+                            {% set sender = message.sender %}
+                            <img class="sender sender-{{ sender.id }} {% if sender.id == current_user.id %}my-message{% else %}not-my-message{% endif %}-sender" name="{{ sender.name }}" surname="{{ sender.surname }}" width="50" height="50" src="/static/img/user_avatars/{{ message.sender.id }}/icon.png" onerror="this.src = '{{url_for('static', filename='/img/user_avatars/default/icon.png')}}'">
+                            <p class="{% if sender.id == current_user.id %}my-message{% else %}not-my-message{% endif %}">{{ message.text }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+                <br id="br">
+            </div>
+            <div id="chat-message-input-container">
+                <div id="chat-message-input-container-inner">
+                    <input type="text" id="chat-message-input" placeholder="Введите сообщение">
+                    <button class="inline btn" id="send-message-btn"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
