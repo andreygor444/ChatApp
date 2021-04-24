@@ -95,6 +95,16 @@ def profile():
         return redirect('/profile')
 
 
+@app.errorhandler(404)
+def error_404(error):
+    return render_template("404.html")
+
+
+@app.route("/js/load_unique_link")
+def get_unique_code():
+    return unique_codes_manager.get_unique_code()
+
+
 @app.route("/js/load_temporary_chat_avatar", methods=["PUT"])
 def load_temporary_chat_avatar():
     return temporary_chat_avatars_manager.load_avatar(request.data)

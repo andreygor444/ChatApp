@@ -17,21 +17,24 @@
                 <div id="profile-data-input">
                     <div class="inline" id="new-chat-avatar">
                         <label for="new-chat-avatar-loader">
-                            <img width="200" height="200" id="new-chat-avatar-img" src="{{user.photo}}"  alt="Аватар пользователя">
+                            <img width="200" height="200" id="new-chat-avatar-img" src="C:\Users\fundgod\PycharmProjects\ChatApp\app\static\img\user_avatars\334\avatar.png"  alt="Аватар пользователя">
                         </label>
                         <input type="file" name="file" id="new-chat-avatar-loader" onchange="loadFile(this.files[0])">
                     </div>
                     <button type="button" id="reset-new-chat-avatar-btn" class="btn close-btn"></button>
                     <div class="inline">
                         <div id="new-chat-name">
-                            <input id="line_bio" name="name" type="text" value="{{user.name}}" placeholder="Имя">
+                            <input id="line_bio" name="name" type="text" value="" placeholder="Имя">
                         </div>
                         <div id="new-chat-name">
-                            <input id="line_bio" name="surname" type="text" value="{{user.surname}}" placeholder="Фамилия">
+                            <input id="line_bio" name="surname" type="text" value="Hello World" placeholder="Фамилия">
                         </div>
                     </div>
                 </div>
                 <div id="button-change-profile-block">
+                    <button onclick="myFunction()">
+                        <span class="tooltiptext" id="myTooltip">Copy sending url</span>
+                    </button>
                     <div id="new-chat-members-list">
                         <button class="inline btn btn-primary" id="change-button-profile">Изменить</button>
                     </div>
