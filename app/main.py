@@ -81,10 +81,13 @@ def profile():
         photo = os.path.join(PATH_TO_ROOT, 'static/img/chat_avatars/default/avatar.png')
         if os.path.isfile('static/img/user_avatars/' + str(current_user.id) + '/avatar.png'):
             photo = os.path.join(PATH_TO_ROOT, 'static', 'img', 'chat_avatars', str(current_user.id), 'avatar.png')
+        notifications = current_user.get_notifications_dict()
+        all_not = sum([int(i.split(':')[1]) for i in notifications])
         user = {
             'photo': photo,
             'name': current_user.name,
-            'surname': current_user.surname
+            'surname': current_user.surname,
+            'notifications': str(all_not)
         }
         return render_template("profile.html", user=user)
     elif request.method == 'POST':
