@@ -9,7 +9,7 @@ function makeFoundMemberBlock(memberName, memberSurname, memberId, prompt) {
     prompt.append(
         `<div class="new-chat-member-variant">
             <div class="inline new-chat-member-variant-avatar-container">
-                <img width="40" height="40" src="static/img/user_avatars/${memberId}/icon.png" class="new-chat-member-variant-avatar" onerror="this.src = 'static/img/user_avatars/default/icon.png'">
+                <img width="40" height="40" src="/static/img/user_avatars/${memberId}/icon.png" class="new-chat-member-variant-avatar" onerror="this.src = 'static/img/user_avatars/default/icon.png'">
             </div>
             <div class="inline new-chat-member-variant-info">
                 <p>${memberName} ${memberSurname}</p>
@@ -24,7 +24,7 @@ function makeNewChatMember(memberId) {
      * Добавляет нового участника в список участников чата в окне создания чата
      */
     $("#add-chat-member-btn").before(
-        `<img width="60" height="60" src="static/img/user_avatars/${memberId}" class="new-chat-member" id="new-chat-member-${memberId}" onerror="this.src = 'static/img/user_avatars/default/icon.png'">`
+        `<img width="60" height="60" src="/static/img/user_avatars/${memberId}" class="new-chat-member" id="new-chat-member-${memberId}" onerror="this.src = 'static/img/user_avatars/default/icon.png'">`
     )
 }
 
@@ -47,7 +47,7 @@ function makeRemoveMemberButton(bottomIndent, memberId) {
      */
     $("body").append(
         `<button class="btn delete-member-btn" id="delete-member-${memberId}-from-new-chat-btn" style="bottom: ${bottomIndent}px">
-            <img width="20" heinht="20" src="static/img/close_button.png">
+            <img width="20" heinht="20" src="/static/img/close_button.png">
         </button>`
     )
 }
@@ -189,7 +189,7 @@ function addChat() {
 }
 
 function resetNewChatAvatar() {
-    $("#new-chat-avatar-img").attr("src", "static/img/chat_avatars/default/icon.png")
+    $("#new-chat-avatar-img").attr("src", "/static/img/chat_avatars/default/icon.png")
     $(this).css({"visibility": "hidden"})
 }
 
@@ -228,7 +228,7 @@ $(document).ready(function() {
     // Бинд кнопок
     $("#add-chat-btn").click(function() {
         $("#add-chat-window").css({"visibility": "visible"})
-        if ($("#new-chat-avatar-img").attr("src") !== "static/img/chat_avatars/default/icon.png") {
+        if ($("#new-chat-avatar-img").attr("src") !== "/static/img/chat_avatars/default/icon.png") {
             $("#reset-new-chat-avatar-btn").css({"visibility": "visible"})
         }
     })

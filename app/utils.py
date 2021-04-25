@@ -73,9 +73,9 @@ def change_user_in_profile(user, name, surname, photo):
 	ch_user.name = name
 	ch_user.surname = surname
 	if photo.filename != '':
-		if not path.isdir('static/img/user_avatars/' + str(ch_user.id)):
-			mkdir('static/img/user_avatars/' + str(ch_user.id))
-		path_todir = 'static/img/user_avatars/' + str(ch_user.id) + '/'
+		if not path.isdir('/static/img/user_avatars/' + str(ch_user.id)):
+			mkdir('/static/img/user_avatars/' + str(ch_user.id))
+		path_todir = '/static/img/user_avatars/' + str(ch_user.id) + '/'
 		load_image(photo.read(), path_todir + 'avatar.png')
 		make_icon(photo, path_todir + 'icon.png')
 	session.commit()

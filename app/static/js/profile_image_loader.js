@@ -3,7 +3,7 @@ const validAvatarExtensions = [".png", ".jpg", ".jpeg", ".webp", ".ico", ".gif"]
 
 
 function resetNewChatAvatar() {
-    $("#new-user-avatar-img").attr("src", "static/img/user_avatars/default/icon.png")
+    $("#new-user-avatar-img").attr("src", "/static/img/user_avatars/default/icon.png")
     $(this).css({"visibility": "hidden"})
 }
 

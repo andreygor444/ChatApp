@@ -6,7 +6,7 @@ from utils import delayed_procedure, make_icon
 
 
 class TemporaryChatAvatarsManager:
-    """В директории static/img/temporary_chat_avatars хранятся аватары чатов,
+    """В директории /static/img/temporary_chat_avatars хранятся аватары чатов,
     которые выбирают пользователи на этапе создания чата, не создавая при этом чат окончательно.
     Эти фотографии сохраняются и через 10 секунд удаляются.
     Данный менеджер управляет этим процессом."""

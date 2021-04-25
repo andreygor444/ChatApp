@@ -85,9 +85,12 @@ def chat_list():
 @app.route("/profile", methods=['POST', 'GET'])
 def profile():
     if request.method == 'GET':
-        photo = os.path.join(PATH_TO_ROOT, 'static/img/chat_avatars/default/avatar.png')
-        if os.path.isfile('static/img/user_avatars/' + str(current_user.id) + '/avatar.png'):
-            photo = os.path.join(PATH_TO_ROOT, 'static', 'img', 'chat_avatars', str(current_user.id), 'avatar.png')
+        path_to_root = PATH_TO_ROOT.replace('\\', '/')
+        photo = path_to_root + '/static/img/chat_avatars/default/avatar.png'
+        print(photo)
+        if os.path.isfile('/static/img/user_avatars/' + str(current_user.id) + '/avatar.png'):
+            photo = PATH_TO_ROOT + '/static/img/user_avatars/' + str(current_user.id) + '/avatar.png'
+        print(photo)
         notifications = current_user.get_notifications_dict()
         all_not = sum([int(i.split(':')[1]) for i in notifications])
         user = {
@@ -96,6 +99,7 @@ def profile():
             'surname': current_user.surname,
             'notifications': str(all_not)
         }
+        print(user['photo'])
         return render_template("profile.html", user=user)
     elif request.method == 'POST':
         name = request.form.get('name')

@@ -22,7 +22,7 @@
                     <div class="chat-card">
                         <a href="chats/{{ chat.id }}" class="link-but-not-link">
                             <div class="inline chat-avatar-container">
-                                <img width="120" height="120" class="chat-avatar" src="static/img/chat_avatars/{{ chat.id }}/icon.png" onerror="this.src = 'static/img/chat_avatars/default/icon.png'" alt="Аватар чата">
+                                <img width="120" height="120" class="chat-avatar" src="/static/img/chat_avatars/{{ chat.id }}/icon.png" onerror="this.src = 'static/img/chat_avatars/default/icon.png'" alt="Аватар чата">
                             </div>
                             <div class="inline chat-card-info">
                                 <div class="chat-title">
@@ -31,7 +31,7 @@
                                 <div class="inline last-message">
                                     {% set last_message = chat.last_message %}
                                     <div class="inline last-message-sender-icon">
-                                        <img width="60" height="60" src="static/img/user_avatars/{{ last_message.sender.id }}/icon.png" onerror="this.src = 'static/img/user_avatars/default/icon.png'" alt="Фото отправителя">
+                                        <img width="60" height="60" src="/static/img/user_avatars/{{ last_message.sender.id }}/icon.png" onerror="this.src = 'static/img/user_avatars/default/icon.png'" alt="Фото отправителя">
                                     </div>
                                     <div class="inline last-message-content">
                                         {{ last_message.text }}
@@ -84,7 +84,7 @@
             <div id="new-chat-data-input">
                 <div class="inline" id="new-chat-avatar">
                     <label for="new-chat-avatar-loader">
-                        <img width="200" height="200" id="new-chat-avatar-img" src="static/img/chat_avatars/default/icon.png" alt="Аватар чата">
+                        <img width="200" height="200" id="new-chat-avatar-img" src="/static/img/chat_avatars/default/icon.png" alt="Аватар чата">
                     </label>
                     <input type="file" id="new-chat-avatar-loader" onchange="loadFile(this.files[0])">
                 </div>
