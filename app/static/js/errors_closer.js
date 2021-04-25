@@ -1,7 +1,7 @@
 function fadeErrors() {
     const errors = $(".alert-danger")
     if (errors.length && opacity) {
-        if (opacity == 1) {
+        if (opacity === 1) {
             opacity -= 0.01
             setTimeout(fadeErrors, 2000)
         } else if (opacity>0) {

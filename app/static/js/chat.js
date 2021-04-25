@@ -1,3 +1,7 @@
+const chatId = window.location.pathname.split('/').pop()
+var chatMemberIds = []  // Id пользователей, которые при создании нового чата будут добавлены в него
+
+
 function makeMessage(messageText, senderName, senderSurname, senderId, isMessageMy) {
     var class_ = "my-message"
     if (!isMessageMy) {
@@ -69,7 +73,28 @@ function bindSender(sender) {
     })
 }
 
-const chatId = window.location.pathname.split('/').pop()
+function editChat() {
+    chatName = $("#chat-name-input").val().trim()
+    if (!chatName) {
+        $("#chat-name-input").css({"color": "red", "border-color": "red"})
+        return
+    }
+    closeAllWindows()
+    if (chatMemberIds.length === 0) {
+        chatMemberIds.push("none")
+    }
+    $.ajax({
+        url: `/js/edit_chat/${chatId}/${chatName}/${chatMemberIds.join(";")}`,
+        method: "PUT",
+        data: $("#chat-avatar-loader").prop("files")[0],
+        contentType: false,
+        processData: false,
+        success: function() {
+            $("#chat-header_title").text(chatName)
+            $("#chat-header_avatar>img").attr("src", `/static/img/chat_avatars/${chatId}/icon.png?update_counter=${counter}`)
+        }
+    })
+}
 
 $(document).ready(function() {
     const headerHeight = $("header").height()
@@ -96,13 +121,54 @@ $(document).ready(function() {
 
     document.getElementById("br").scrollIntoView(false)
 
+    $("#chat-message-list").css({"visibility": "visible"})
+
     $("#send-message-btn").click(function() {
         if ($("#chat-message-input").val()) {
             sendMessage()
         }
     })
 
+    $("#chat-header_settings-btn").click(function() {
+        $("#edit-chat-window").css({"visibility": "visible"})
+        if ($("#chat-avatar-img").attr("src") !== "/static/img/chat_avatars/default/icon.png") {
+            $("#reset-chat-avatar-btn").css({"visibility": "visible"})
+        }
+    })
+
+    $("#apply-editing-chat-btn").click(editChat)
+
     bindSender($(".sender"))
+
+    $.ajax({
+        url: `/js/get_chat_members/${chatId}`,
+        success: function(members) {
+            var memberList = $("#new-chat-members-list")
+            var beforeMemberListheight
+            var memberData
+            var flag = true
+            for (var i=0; i<members.length;i++) {
+                memberData = members[i]
+                chatMemberIds.push(memberData.id)
+                beforeMemberListheight = memberList.height()
+                memberList.append(makeChatMember(memberData.id, memberData.name, memberData.surname))
+                bindMember($(`#new-chat-member-${memberData.id}`))
+                if (flag && memberList.height() > beforeMemberListheight && i > 1) {
+                    flag = false
+                    memberList = $("#all-chat-members-list")
+                    $(".new-chat-member:last").appendTo(memberList)
+                    $("#new-chat-members-list>img:last").appendTo(memberList)
+                    $("#new-chat-members-list").append(`<img id="open-all-chat-members-window-btn" width="60" height="60" src="/static/img/add_button.png">`)
+                    $("#open-all-chat-members-window-btn")
+                    .click(function() {
+                        $("#search-member-window").css({"visibility": "hidden"})
+                        $("#chat-members-window").css({"visibility": "visible"})
+                    })
+                }
+            }
+            $("#add-chat-member-btn").appendTo($("#new-chat-members-list"))
+        }
+    })
 
     setInterval(checkNewMessages, 1000)
 })

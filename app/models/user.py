@@ -8,7 +8,6 @@ import sys
 sys.path.append("..")
 
 from db_session import SqlAlchemyBase
-from .chat import Chat
 from exceptions import NotFoundError
 
 
@@ -50,7 +49,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
 				return int(notifications)
 		raise NotFoundError("User is not a member of this chat")
 
-	def add_chat_notification(self, chat: Chat) -> None:
+	def add_chat_notification(self, chat) -> None:
 		"""Добавляет к чату в списке чатов пользователя оповещение о непрочитанном сообщении"""
 		chats = self.chats.split(';')
 		chat_id = chat.id

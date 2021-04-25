@@ -1,7 +1,7 @@
 from flask import Flask, request, redirect, render_template, jsonify, abort
 from flask_login import LoginManager, login_user, login_required, current_user
 from datetime import timedelta
-import logging
+from shutil import rmtree as remove_dir
 
 from db_session import db_session_init
 from unique_codes_manager import UniqueCodesManager
@@ -73,8 +73,8 @@ def registration(unique_code):
 def chat_list():
 	user_chats = get_user_chats(current_user)
 	notifications = current_user.get_notifications_dict()
-	user_chats.sort(key=lambda chat: notifications[chat.id], reverse=True)
 	user_chats.sort(key=lambda chat: chat.last_message.dispatch_date, reverse=True)
+	user_chats.sort(key=lambda chat: notifications[chat.id], reverse=True)
 	return render_template("chats.html", user_chats=user_chats)
 
 
@@ -87,9 +87,10 @@ def chat(chat_id):
 	except NotFoundError:
 		abort(404)
 	messages = get_chat_messages(chat_id, sort_param=Message.dispatch_date, session=session)
+	chat_members = chat.get_members(session=session)
 	unread_messages_manager.reset_unread_messages(current_user.id, chat_id)
 	notify_user(current_user.id, chat_id, clear=True, session=session)
-	return render_template("chat.html", chat=chat, messages=messages)
+	return render_template("chat.html", chat=chat, messages=messages, chat_members=chat_members)
 
 
 @login_required
@@ -134,7 +135,7 @@ def add_chat_handler(name, members):
 		members += f";{creator}"
 	session = create_session()
 	chat_id = add_chat(name, members, creator, session=session)
-	write_first_chat_message(chat_id, current_user.id, session=session)
+	first_message = write_first_chat_message(chat_id, current_user.id, session=session)
 	chat_avatar = request.data
 	if chat_avatar:
 		path = os.path.join(PATH_TO_ROOT, "static", "img", "chat_avatars", str(chat_id))
@@ -147,7 +148,36 @@ def add_chat_handler(name, members):
 		"status": "ok",
 		"chat_id": chat_id,
 		"creator_id": current_user.id,
-		"first_message_text": FIRST_CHAT_MESSAGE_TEXT
+		"first_message_text": FIRST_CHAT_MESSAGE_TEXT,
+		"date": first_message.get_dispatch_date_for_html()
+	})
+
+
+@login_required
+@app.route("/js/edit_chat/<int:chat_id>/<name>/<members>", methods=["PUT"])
+def edit_chat_handler(chat_id, name, members):
+	"""Редактирует чат"""
+	creator = current_user.id
+	if members == "none":
+		members = str(creator)
+	else:
+		members += f";{creator}"
+	session = create_session()
+	new_members, _ = edit_chat(chat_id, name, members, session=session)
+	chat_avatar = request.data
+	if chat_avatar:
+		path = os.path.join(PATH_TO_ROOT, "static", "img", "chat_avatars", str(chat_id))
+		try:
+			remove_dir(path)
+		except FileNotFoundError:
+			pass
+		os.mkdir(path)
+		load_image(chat_avatar, f"{path}/avatar.png")
+		make_icon(chat_avatar, f"{path}/icon.png")
+	for user_id in new_members:
+		add_chat_to_user_chat_list(chat_id, user_id, session=session)
+	return jsonify({
+		"status": "ok",
 	})
 
 
@@ -159,7 +189,6 @@ def send_message(chat_id):
 	user_id = current_user.id
 	message_id = add_message(user_id, message_text, chat_id, session=session)
 	session.query(Chat).filter(Chat.id == chat_id).update({"last_message_id": message_id})
-	session.commit()
 	chat = get_chat_by_id(chat_id, session=session)
 	chat_member_ids = map(int, chat.members.split(';'))
 	for member_id in chat_member_ids:
@@ -204,6 +233,15 @@ def get_unread_messages(chat_id):
 	return jsonify(
 		[message.to_dict(only=("sender_id", "sender.name", "sender.surname", "text")) for message in messages]
 	)
+
+
+@login_required
+@app.route("/js/get_chat_members/<int:chat_id>")
+def get_chat_messages_handler(chat_id):
+	session = create_session()
+	chat = get_chat_by_id(chat_id, session=session)
+	members = chat.get_members(session=session)
+	return jsonify([member.to_dict(only=("id", "name", "surname")) for member in members if member.id != current_user.id])
 
 
 def main():

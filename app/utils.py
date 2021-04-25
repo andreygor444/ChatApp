@@ -6,6 +6,7 @@ from PIL import Image
 from io import BytesIO
 from typing import List, Union, Optional, Iterable
 import datetime
+import logging
 
 from db_session import create_session
 from models.user import User
@@ -96,13 +97,32 @@ def add_chat(name: str, members: Union[Iterable[str], str], creator_id: int, ses
     chat = Chat()
     chat.name = name
     if isinstance(members, list):
-        members = ';'.join(members)
+        members = ';'.join(map(str, members))
     chat.members = members
     chat.creator_id = creator_id
     chat.moderators = str(creator_id)
     session.add(chat)
     session.commit()
     return chat.id
+
+
+def edit_chat(chat_id: int, chat_name: str, members: Union[Iterable[str], str], session: Optional[Session] = None) -> List[List[int]]:
+    if session is None:
+        session = create_session()
+    if isinstance(members, list):
+        members_set = set(map(int, members))
+        members = ';'.join(map(str, members))
+    else:
+        members_set = set(map(int, members.split(';')))
+    
+    chat = session.query(Chat).filter(Chat.id == chat_id).first()
+    current_members = set(map(int, chat.members.split(';')))
+    new_members = members_set - current_members
+    deleted_members = current_members - members_set
+    
+    session.query(Chat).filter(Chat.id == chat_id).update({"name": chat_name, "members": members})
+    session.commit()
+    return tuple(new_members), tuple(deleted_members)
 
 
 def add_message(sender_id: int, message_text: str, chat_id: int, session: Optional[Session] = None) -> int:
@@ -118,7 +138,7 @@ def add_message(sender_id: int, message_text: str, chat_id: int, session: Option
     return message.id
 
 
-def write_first_chat_message(chat_id: int, user_id: int, session: Optional[Session] = None) -> None:
+def write_first_chat_message(chat_id: int, user_id: int, session: Optional[Session] = None) -> Message:
     if session is None:
         session = create_session()
     message = Message()
@@ -130,6 +150,7 @@ def write_first_chat_message(chat_id: int, user_id: int, session: Optional[Sessi
     session.commit()
     session.query(Chat).filter(Chat.id == chat_id).update({"last_message_id": message.id})
     session.commit()
+    return message
 
 
 def get_user_by_id(user_id: int, session: Optional[Session] = None) -> User:
@@ -157,7 +178,7 @@ def notify_user(user_id: int, chat_id: int, clear=False, commit=True, session: O
         else:
             notifications[chat_id] += 1
         notifications = ';'.join(':'.join(map(str, item)) for item in notifications.items())
-        session.query(User).update({"chats": notifications})
+        session.query(User).filter(User.id == user_id).update({"chats": notifications})
         if commit:
             session.commit()
     except KeyError:

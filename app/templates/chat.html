@@ -2,6 +2,7 @@
 
 {% block head %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/chat_member_hover_nameplates.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/chat_settings_window.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/chat.js') }}"></script>
 {% endblock %}
 
@@ -10,7 +11,17 @@
         <div id="main-content">
             <div id="chat-header">
                 <div id="chat-header-inner">
-                    <h2>{{ chat.name }}</h2>
+                    <div id="chat-header_avatar" class="inline">
+                        <img width="50" height="50" src="/static/img/chat_avatars/{{ chat.id }}/icon.png" onerror="this.src = '/static/img/chat_avatars/default/icon.png'">
+                    </div>
+                    <h2 id="chat-header_title" class="inline">{{ chat.name }}</h2>
+                    {% if current_user.id == chat.creator_id %}
+                        <button id="chat-header_settings-btn" class="inline btn">
+                            <img width="50" height="50" src="{{ url_for('static', filename='img/settings_button.png') }}" alt="Настройки">
+                        </button>
+                    {% else %}
+                    <button class="inline placeholder"></button>
+                    {% endif %}
                 </div>
             </div>
             <div id="chat-message-list">
@@ -33,4 +44,59 @@
             </div>
         </div>
     </div>
+
+    {% if current_user.id == chat.creator_id %}
+        <div id="edit-chat-window">
+            <div id="edit-chat-window-inner">
+                <div id=edit-chat-window-header>
+                    <div class="inline" id="edit-chat-window-title">
+                        <h1>Добавление чата</h1>
+                    </div>
+                    <div class="inline" id="close-edit-chat-window-btn-container">
+                        <button class="btn close-btn" id="close-edit-chat-window-btn"></button>
+                    </div>
+                </div>
+                <div id="new-chat-data-input">
+                    <div class="inline" id="new-chat-avatar">
+                        <label for="chat-avatar-loader">
+                            <img width="200" height="200" id="chat-avatar-img" src="/static/img/chat_avatars/{{ chat.id }}/icon.png" onerror="this.src = '/static/img/chat_avatars/default/icon.png'">
+                        </label>
+                        <input type="file" id="chat-avatar-loader" onchange="loadFile(this.files[0])">
+                    </div>
+                    <button id="reset-chat-avatar-btn" class="btn close-btn"></button>
+                    <div class="inline" id="new-chat-name">
+                        <input id="chat-name-input" type="text" placeholder="Название чата" value="{{ chat.name }}">
+                    </div>
+                </div>
+                <div id="new-chat-members-list-block">
+                    <h2>Участники</h2>
+                    <div id="new-chat-members-list">
+                        <button class="inline btn btn-primary" id="add-chat-member-btn">Добавить участника</button>
+                    </div>
+                </div>
+                <button class="btn btn-success" id="apply-editing-chat-btn">Применить</button>
+            </div>
+        </div>
+
+        <div id="search-member-window">
+            <div id="search-member-window-inner">
+                <div>
+                    <button class="btn close-btn" id="close-search-member-window-btn"></button>
+                </div>
+                <div id="new-chat-member-name">
+                    <input class="inline" id="new-chat-member-name-input" type="text" placeholder="Имя/id участника">
+                </div>
+                <div id="new-chat-member-search-prompt"></div>
+            </div>
+        </div>
+
+        <div id="chat-members-window">
+            <div id="chat-members-window-inner">
+                <div>
+                    <button class="btn close-btn" id="close-chat-members-member-window-btn"></button>
+                </div>
+                <div id="all-chat-members-list"></div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

@@ -2,6 +2,7 @@
 
 {% block head %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/chat_member_hover_nameplates.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/chat_settings_window.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/chats.js') }}"></script>
 {% endblock %}
 
@@ -22,7 +23,7 @@
                     <div class="chat-card" id="chat-card-{{ chat.id }}">
                         <a href="chats/{{ chat.id }}" class="link-but-not-link">
                             <div class="inline chat-avatar-container">
-                                <img width="120" height="120" class="chat-avatar" src="static/img/chat_avatars/{{ chat.id }}/icon.png" onerror="this.src = 'static/img/chat_avatars/default/icon.png'">
+                                <img width="120" height="120" class="chat-avatar" src="/static/img/chat_avatars/{{ chat.id }}/icon.png" onerror="this.src = '/static/img/chat_avatars/default/icon.png'">
                             </div>
                             <div class="inline chat-card-info">
                                 <div class="chat-title">
@@ -31,7 +32,7 @@
                                 <div class="inline last-message">
                                     {% set last_message = chat.last_message %}
                                     <div class="inline last-message-sender-icon">
-                                        <img width="60" height="60" src="static/img/user_avatars/{{ last_message.sender.id }}/icon.png" onerror="this.src = 'static/img/user_avatars/default/icon.png'">
+                                        <img width="60" height="60" src="/static/img/user_avatars/{{ last_message.sender.id }}/icon.png" onerror="this.src = '/static/img/user_avatars/default/icon.png'">
                                     </div>
                                     <div class="inline last-message-content">
                                         {{ last_message.text }}
@@ -71,26 +72,26 @@
         </div>
     </div>
 
-    <div id="add-chat-window">
-        <div id="add-chat-window-inner">
-            <div id=add-chat-window-header>
-                <div class="inline" id="add-chat-window-title">
+    <div id="edit-chat-window">
+        <div id="edit-chat-window-inner">
+            <div id=edit-chat-window-header>
+                <div class="inline" id="edit-chat-window-title">
                     <h1>Добавление чата</h1>
                 </div>
-                <div class="inline" id="close-add-chat-window-btn-container">
-                    <button class="btn close-btn" id="close-add-chat-window-btn"></button>
+                <div class="inline" id="close-edit-chat-window-btn-container">
+                    <button class="btn close-btn" id="close-edit-chat-window-btn"></button>
                 </div>
             </div>
             <div id="new-chat-data-input">
                 <div class="inline" id="new-chat-avatar">
-                    <label for="new-chat-avatar-loader">
-                        <img width="200" height="200" id="new-chat-avatar-img" src="static/img/chat_avatars/default/icon.png">
+                    <label for="chat-avatar-loader">
+                        <img width="200" height="200" id="chat-avatar-img" src="/static/img/chat_avatars/default/icon.png">
                     </label>
-                    <input type="file" id="new-chat-avatar-loader" onchange="loadFile(this.files[0])">
+                    <input type="file" id="chat-avatar-loader" onchange="loadFile(this.files[0])">
                 </div>
-                <button id="reset-new-chat-avatar-btn" class="btn close-btn"></button>
+                <button id="reset-chat-avatar-btn" class="btn close-btn"></button>
                 <div class="inline" id="new-chat-name">
-                    <input id="new-chat-name-input" type="text" placeholder="Название чата">
+                    <input id="chat-name-input" type="text" placeholder="Название чата">
                 </div>
             </div>
             <div id="new-chat-members-list-block">
@@ -99,7 +100,7 @@
                     <button class="inline btn btn-primary" id="add-chat-member-btn">Добавить участника</button>
                 </div>
             </div>
-            <button class="btn btn-success" id="apply-adding-chat-btn">Добавить</button>
+            <button class="btn btn-success" id="apply-editing-chat-btn">Добавить</button>
         </div>
     </div>
 
@@ -112,6 +113,15 @@
                 <input class="inline" id="new-chat-member-name-input" type="text" placeholder="Имя/id участника">
             </div>
             <div id="new-chat-member-search-prompt"></div>
+        </div>
+    </div>
+
+    <div id="chat-members-window">
+        <div id="chat-members-window-inner">
+            <div>
+                <button class="btn close-btn" id="close-chat-members-member-window-btn"></button>
+            </div>
+            <div id="all-chat-members-list"></div>
         </div>
     </div>
 {% endblock %}
