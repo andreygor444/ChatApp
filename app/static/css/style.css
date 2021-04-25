@@ -57,6 +57,15 @@ header {
 	margin-top: 5px;
 	margin-left: 30px;
 	font-size: 45px;
+	display:inline-block;
+}
+
+#app-head-buttons {
+	font-weight: 600;
+	margin-top: 5px;
+	margin-left: 30px;
+	font-size: 45px;
+	display:inline-block;
 }
 
 
@@ -587,48 +596,45 @@ header {
 	outline: none;
 }
 
+#redirect_to_profile_button {
+	width: 140px;
+	height: 40px;
+	border-radius: 5px;
+	border: 3px solid #A1A1A1;
+	font-size: 1.1em;
+	position: absolute;
+	right: 17%;
+	bottom: 25%;
+	background-color: #008B8B;
+}
+
+#logout_button{
+    width: 200px;
+	height: 40px;
+	border-radius: 5px;
+	border: 3px solid #A1A1A1;
+	font-size: 1.1em;
+	position: absolute;
+	right: 5%;
+	bottom: 25%;
+	background-color: #8B0000;
+}
+
+#copy_link_button{
+    width: 300px;
+	height: 50px;
+	border-radius: 10px;
+	border: 3px solid #A1A1A1;
+	font-size: 1.3em;
+	position: absolute;
+	left: 5%;
+	bottom: 6%;
+	background-color: #20B2AA;
+}
+
 #profile-data-input {
 	width: 90%;
 	margin-left: 5%;
-}
-
-#tooltip {
-    position: relative;
-    display: inline-block;
-    background-color: #555;
-}
-
-.tooltip .tooltiptext {
-    visibility: hidden;
-    width: 140px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    bottom: 150%;
-    left: 50%;
-    margin-left: -75px;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.tooltip .tooltiptext::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-}
-
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
 }
 
 #error-404-block {

@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect, render_template, jsonify, abort
-from flask_login import LoginManager, login_user, login_required, current_user
+from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 
 from db_session import db_session_init
 from unique_codes_manager import UniqueCodesManager
@@ -19,6 +19,13 @@ login_manager.init_app(app)
 unique_codes_manager = UniqueCodesManager()
 unique_codes_manager.generate_unique_codes(10)
 temporary_chat_avatars_manager = TemporaryChatAvatarsManager()
+
+
+@login_required
+@app.route('/logout')
+def logout_user():
+    logout_user()
+    return redirect('/')
 
 
 @login_manager.user_loader
