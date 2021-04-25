@@ -391,7 +391,19 @@ header {
 	display: none;
 }
 
+#new-user-avatar-loader {
+	display: none;
+	top: 10px;
+}
+
 #reset-new-chat-avatar-btn {
+	position: relative;
+	right: 40px;
+	bottom: 65px;
+	visibility: hidden;
+}
+
+#reset-new-user-avatar-btn {
 	position: relative;
 	right: 40px;
 	bottom: 65px;
@@ -599,20 +611,17 @@ header {
 #redirect_to_profile_button {
 	width: 140px;
 	height: 40px;
-	border-radius: 5px;
-	border: 3px solid #A1A1A1;
+	border-radius: 20px;
 	font-size: 1.1em;
 	position: absolute;
 	right: 17%;
 	bottom: 25%;
-	background-color: #008B8B;
 }
 
 #logout_button{
     width: 200px;
 	height: 40px;
-	border-radius: 5px;
-	border: 3px solid #A1A1A1;
+	border-radius: 20px;
 	font-size: 1.1em;
 	position: absolute;
 	right: 5%;
@@ -623,13 +632,11 @@ header {
 #copy_link_button{
     width: 300px;
 	height: 50px;
-	border-radius: 10px;
-	border: 3px solid #A1A1A1;
+	border-radius: 25px;
 	font-size: 1.3em;
 	position: absolute;
 	left: 5%;
 	bottom: 6%;
-	background-color: #20B2AA;
 }
 
 #profile-data-input {
@@ -662,4 +669,14 @@ header {
 	width: 90%;
     padding: 10px;
 	margin-left: 4%;
+}
+
+#new-user-avatar-img {
+	border: 5px solid #326da6;
+	border-radius: 100px;
+}
+
+#new-user-avatar-img:hover {
+	cursor: pointer;
+	opacity: 0.7;
 }

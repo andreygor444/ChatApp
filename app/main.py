@@ -23,7 +23,7 @@ temporary_chat_avatars_manager = TemporaryChatAvatarsManager()
 
 @login_required
 @app.route('/logout')
-def logout_user():
+def logout():
     logout_user()
     return redirect('/')
 

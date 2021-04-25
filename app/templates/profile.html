@@ -2,7 +2,7 @@
 
 {% block head %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/cookie.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/add_chat.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/profile_image_loader.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -16,12 +16,12 @@
             <form method="post" enctype="multipart/form-data">
                 <div id="profile-data-input">
                     <div class="inline" id="new-chat-avatar">
-                        <label for="new-chat-avatar-loader">
-                            <img width="200" height="200" id="new-chat-avatar-img" src="{{ user.photo }}"  alt="Аватар пользователя">
+                        <label for="new-user-avatar-loader">
+                            <img width="200" height="200" id="new-user-avatar-img" src="{{ user.photo }}"  alt="Аватар пользователя">
                         </label>
-                        <input type="file" name="file" id="new-chat-avatar-loader" onchange="loadFile(this.files[0])">
+                        <input type="file" name="file" id="new-user-avatar-loader" onchange="loadFile(this.files[0])">
                     </div>
-                    <button type="button" id="reset-new-chat-avatar-btn" class="btn close-btn"></button>
+                    <button type="button" id="reset-new-user-avatar-btn" class="btn close-btn"></button>
                     <div class="inline">
                         <div id="new-chat-name">
                             <input id="line_bio" name="name" type="text" value="{{ user.name }}" placeholder="Имя">
@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div id="button-change-profile-block">
-                    <button onclick="myFunction()" class="inline btn btn-primary" id="copy_link_button">Скопировать приглашение</button>
+                    <button onclick="myFunction()" class="inline btn btn-primary" id="copy_link_button">Получить приглашение</button>
                     <button class="inline btn btn-primary" id="change-button-profile">Изменить</button>
                 </div>
             </form>
