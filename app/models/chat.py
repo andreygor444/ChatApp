@@ -18,7 +18,6 @@ class Chat(SqlAlchemyBase):
 	members = sqlalchemy.Column(sqlalchemy.String)
 	creator_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
 	last_message_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("messages.id"))
-	moderators = sqlalchemy.Column(sqlalchemy.String)
 	creator = orm.relation("User")
 	last_message = orm.relation("Message", foreign_keys=[last_message_id])
 

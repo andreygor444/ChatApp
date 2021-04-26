@@ -100,7 +100,6 @@ def add_chat(name: str, members: Union[Iterable[str], str], creator_id: int, ses
         members = ';'.join(map(str, members))
     chat.members = members
     chat.creator_id = creator_id
-    chat.moderators = str(creator_id)
     session.add(chat)
     session.commit()
     return chat.id
