@@ -1,7 +1,8 @@
 from flask import Flask, request, redirect, render_template, jsonify, abort
-from flask_login import LoginManager, login_user, login_required, current_user
+from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 from datetime import timedelta
 from shutil import rmtree as remove_dir
+from random import randrange
 
 from db_session import db_session_init
 from unique_codes_manager import UniqueCodesManager
@@ -26,15 +27,16 @@ temporary_chat_avatars_manager = TemporaryChatAvatarsManager()
 unread_messages_manager = UnreadMessagesManager()
 
 
+@login_required
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect("/login")
+
+
 @login_manager.user_loader
 def load_user(user_id):
-	return create_session().query(User).get(user_id)
-
-
-@login_required
-@app.route('/')
-def home_page():
-	return render_template("index.html")
+    return create_session().query(User).get(user_id)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -44,7 +46,7 @@ def authorization():
 		user = get_user_by_email(form.email.data)
 		if user and user.check_password(form.password.data):
 			login_user(user, remember=form.remember_me.data)
-			return redirect('/')
+			return redirect("/chats")
 		return render_template("login.html", message="Неправильный логин или пароль", form=form)
 	return render_template("login.html", form=form)
 
@@ -53,7 +55,7 @@ def authorization():
 def registration(unique_code):
 	if not unique_codes_manager.check_code(unique_code):
 		abort(403)
-	#unique_codes_manager.update_code(unique_code)
+	unique_codes_manager.update_code(unique_code)
 	form = RegisterForm()
 	if form.validate_on_submit():
 		db_sess = create_session()
@@ -71,11 +73,35 @@ def registration(unique_code):
 @login_required
 @app.route("/chats")
 def chat_list():
-	user_chats = get_user_chats(current_user)
-	notifications = current_user.get_notifications_dict()
-	user_chats.sort(key=lambda chat: chat.last_message.dispatch_date, reverse=True)
-	user_chats.sort(key=lambda chat: notifications[chat.id], reverse=True)
-	return render_template("chats.html", user_chats=user_chats)
+    user_chats = get_user_chats(current_user)
+    notifications = current_user.get_notifications_dict()
+    user_chats.sort(key=lambda chat: chat.last_message.dispatch_date, reverse=True)
+    user_chats.sort(key=lambda chat: notifications[chat.id], reverse=True)
+    return render_template("chats.html", user_chats=user_chats)
+
+
+@login_required
+@app.route("/profile", methods=["POST", "GET"])
+def profile():
+    if request.method == "GET":
+        notifications_dict = current_user.get_notifications_dict()
+        all_notifications = sum(notifications_dict.values())
+        return render_template("profile.html", user=current_user, notifications=all_notifications, random_number=randrange(1, 500))
+    name = request.form.get("name")
+    surname = request.form.get("surname")
+    avatar = request.files.get("file")
+    edit_user(current_user, name, surname, avatar.read())
+    return redirect("/profile")
+
+
+@app.errorhandler(404)
+def error_404(error):
+    return render_template("404.html")
+
+
+@app.route("/js/get_invite_link_code")
+def get_unique_code():
+    return jsonify({"code": unique_codes_manager.get_unique_code()})
 
 
 @login_required
@@ -96,7 +122,7 @@ def chat(chat_id):
 @login_required
 @app.route("/js/load_temporary_chat_avatar", methods=["PUT"])
 def load_temporary_chat_avatar():
-	return temporary_chat_avatars_manager.load_avatar(request.data)
+    return temporary_chat_avatars_manager.load_avatar(request.data)
 
 
 @login_required
@@ -245,8 +271,8 @@ def get_chat_messages_handler(chat_id):
 
 
 def main():
-	app.run(host="0.0.0.0", port=3838, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)
 
 
 if __name__ == "__main__":
-	main()
+    main()

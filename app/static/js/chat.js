@@ -79,7 +79,6 @@ function editChat() {
         $("#chat-name-input").css({"color": "red", "border-color": "red"})
         return
     }
-    closeAllWindows()
     if (chatMemberIds.length === 0) {
         chatMemberIds.push("none")
     }
@@ -92,6 +91,7 @@ function editChat() {
         success: function() {
             $("#chat-header_title").text(chatName)
             $("#chat-header_avatar>img").attr("src", `/static/img/chat_avatars/${chatId}/icon.png?update_counter=${counter}`)
+            location.reload()
         }
     })
 }

@@ -17,12 +17,13 @@
 		<div class="header-inner">
 			<div id="app-name">
 				<h1>ChatApp</h1>
+				{% if current_user.is_authenticated %}
+					<button onclick="location.href='/chats';" class="inline btn header-btn" id="go-to-my-chats-btn">Мои чаты</button>
+					<button onclick="location.href='/profile';" class="inline btn header-btn" id="go-to-profile-btn">Профиль</button>
+					<button onclick="location.href='/logout';" class="inline btn header-btn" id="logout-btn">Выйти из профиля</button>
+				{% endif %}
 			</div>
-			{% if current_user.is_authentificated %}
-				<div class="user-profile-link">
-					<a href="/profile">{{ current_user.name }}</a>
-				</div>
-			{% endif %}
+
 		</div>
 	</header>
 	{% block content %}{% endblock %}

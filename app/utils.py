@@ -7,12 +7,14 @@ from io import BytesIO
 from typing import List, Union, Optional, Iterable
 import datetime
 import logging
+import os
 
 from db_session import create_session
 from models.user import User
 from models.chat import Chat
 from models.message import Message
 from config import FIRST_CHAT_MESSAGE_TEXT
+from config import PATH_TO_ROOT
 from exceptions import *
 
 
@@ -89,6 +91,28 @@ def add_user(name, surname, email, password, session: Optional[Session] = None) 
     session.add(user)
     session.commit()
     return user.id
+
+
+def edit_user(user: User, name: str, surname: str, avatar: bytes, session: Optional[Session] = None) -> None:
+    if session is None:
+        session = create_session()
+    session.query(User).filter(User.id == user.id).update({"name": name, "surname": surname})
+    session.commit()
+    user_avatar_dir = os.path.join(PATH_TO_ROOT, "static", "img", "user_avatars", str(user.id))
+    if avatar:
+        try:
+            os.mkdir(user_avatar_dir)
+        except FileExistsError:
+            pass
+        load_image(avatar, os.path.join(user_avatar_dir, "avatar.png"))
+        make_icon(avatar, os.path.join(user_avatar_dir, "icon.png"))
+        return
+    try:
+        os.remove(os.path.join(user_avatar_dir, "avatar.png"))
+        os.remove(os.path.join(user_avatar_dir, "icon.png"))
+        os.rmdir(user_avatar_dir)
+    except FileNotFoundError:
+        pass
 
 
 def add_chat(name: str, members: Union[Iterable[str], str], creator_id: int, session: Optional[Session] = None) -> int:

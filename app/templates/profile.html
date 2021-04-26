@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/profile_image_loader.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/get_unique_code.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="profile-window">
+        <div id="profile-inner">
+            <div id=profile-header>
+                <div class="inline" id="profile-title">
+                    <h1>Данные о профиле</h1>
+                </div>
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                <div id="profile-data-input">
+                    <div class="inline" id="user-avatar">
+                        <label for="new-user-avatar-loader">
+                            <img width="200" height="200" id="new-user-avatar-img" src="/static/img/user_avatars/{{ user.id }}/icon.png?update={{ random_number }}"  onerror="this.src = '/static/img/user_avatars/default/icon.png'">
+                        </label>
+                        <input type="file" name="file" id="new-user-avatar-loader" onchange="loadFile(this.files[0])">
+                    </div>
+                    <button type="button" id="reset-new-user-avatar-btn" class="btn close-btn"></button>
+                    <div class="inline">
+                        <div>
+                            <input id="user-name" class="user-info" name="name" type="text" value="{{ user.name }}" placeholder="Имя">
+                        </div>
+                        <div>
+                            <input class="user-info" name="surname" type="text" value="{{ user.surname }}" placeholder="Фамилия">
+                        </div>
+                        <div class="user-info">
+                            Количество уведомлений - {{ notifications }}
+                        </div>
+                    </div>
+                </div>
+                <div id="profile-buttons-container">
+                    <button onclick="getAndCopyUniqueCode()" class="inline btn btn-primary" id="get-link-btn">Получить пригласительную ссылку</button>
+                    <button class="inline btn" id="change-profile-btn">Изменить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
