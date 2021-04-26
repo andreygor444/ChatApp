@@ -9,6 +9,7 @@
 		  crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
 	{% block head %}{% endblock %}
 </head>
 <body>
@@ -16,12 +17,13 @@
 		<div class="header-inner">
 			<div id="app-name">
 				<h1>ChatApp</h1>
+				{% if current_user.is_authenticated %}
+					<button onclick="location.href='/chats';" class="inline btn header-btn" id="go-to-my-chats-btn">Мои чаты</button>
+					<button onclick="location.href='/profile';" class="inline btn header-btn" id="go-to-profile-btn">Профиль</button>
+					<button onclick="location.href='/logout';" class="inline btn header-btn" id="logout-btn">Выйти из профиля</button>
+				{% endif %}
 			</div>
-			{% if current_user.is_authentificated %}
-				<div class="user-profile-link">
-					<a href="/profile">{{ current_user.name }}</a>
-				</div>
-			{% endif %}
+
 		</div>
 	</header>
 	{% block content %}{% endblock %}

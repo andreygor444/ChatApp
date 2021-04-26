@@ -1,5 +1,7 @@
 import sqlalchemy
 from sqlalchemy import orm
+from sqlalchemy_serializer import SerializerMixin
+import datetime
 import sys
 
 sys.path.append("..")
@@ -7,7 +9,7 @@ sys.path.append("..")
 from db_session import SqlAlchemyBase
 
 
-class Message(SqlAlchemyBase):
+class Message(SqlAlchemyBase, SerializerMixin):
 	__tablename__ = "messages"
 
 	id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
