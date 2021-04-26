@@ -22,7 +22,7 @@ temporary_chat_avatars_manager = TemporaryChatAvatarsManager()
 
 
 @login_required
-@app.route('/logout')
+@app.route("/logout")
 def logout():
     logout_user()
     return redirect('/')
@@ -55,7 +55,7 @@ def authorization():
 def registration(unique_code):
     if not unique_codes_manager.check_code(unique_code):
         abort(403)
-    #unique_codes_manager.update_code(unique_code)
+    unique_codes_manager.update_code(unique_code)
     form = RegisterForm()
     if form.validate_on_submit():
         db_sess = create_session()
@@ -82,31 +82,17 @@ def chat_list():
 
 
 @login_required
-@app.route("/profile", methods=['POST', 'GET'])
+@app.route("/profile", methods=["POST", "GET"])
 def profile():
-    if request.method == 'GET':
-        path_to_root = PATH_TO_ROOT.replace('\\', '/')
-        photo = path_to_root + '/static/img/chat_avatars/default/avatar.png'
-        print(photo)
-        if os.path.isfile('/static/img/user_avatars/' + str(current_user.id) + '/avatar.png'):
-            photo = PATH_TO_ROOT + '/static/img/user_avatars/' + str(current_user.id) + '/avatar.png'
-        print(photo)
-        notifications = current_user.get_notifications_dict()
-        all_not = sum([int(i.split(':')[1]) for i in notifications])
-        user = {
-            'photo': photo,
-            'name': current_user.name,
-            'surname': current_user.surname,
-            'notifications': str(all_not)
-        }
-        print(user['photo'])
-        return render_template("profile.html", user=user)
-    elif request.method == 'POST':
-        name = request.form.get('name')
-        surname = request.form.get('surname')
-        file = request.files.get('file')
-        change_user_in_profile(current_user, name, surname, file)
-        return redirect('/profile')
+    if request.method == "GET":
+        notifications_dict = current_user.get_notifications_dict()
+        all_notifications = sum(notifications_dict.values())
+        return render_template("profile.html", user=current_user, notifications=all_notifications)
+    name = request.form.get("name")
+    surname = request.form.get("surname")
+    avatar = request.files.get("file")
+    edit_user(current_user, name, surname, avatar.read())
+    return redirect("/profile")
 
 
 @app.errorhandler(404)
@@ -114,9 +100,9 @@ def error_404(error):
     return render_template("404.html")
 
 
-@app.route("/js/load_unique_link")
+@app.route("/js/get_invite_link_code")
 def get_unique_code():
-    return unique_codes_manager.get_unique_code()
+    return jsonify({"code": unique_codes_manager.get_unique_code()})
 
 
 @app.route("/js/load_temporary_chat_avatar", methods=["PUT"])

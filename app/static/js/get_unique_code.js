@@ -1,11 +1,14 @@
-function myFunction() {
-  $.ajax({
-            url: "/js/load_unique_link",
-            dataType: 'text',
-            success: function(code) {
-                console.log("2")
-                document.execCommand("copy");
-                console.log("3")
-            }
-        })
+function getAndCopyUniqueCode() {
+    $.ajax({
+        url: "/js/get_invite_link_code",
+        method: "GET",
+        contentType: false,
+        success: function(code) {
+            $("body").append(`<span id="code-span">${code}</span>`)
+            const codeSpan = $("#code-span")
+            codeSpan.select()
+            document.execCommand("copy")
+            codeSpan.remove()
+        }
+    })
 }

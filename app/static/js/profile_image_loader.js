@@ -48,4 +48,3 @@ $(document).ready(function() {
 function closeAllWindows() {
     $("#reset-new-user-avatar-btn").css({"visibility": "hidden"})
 }
-

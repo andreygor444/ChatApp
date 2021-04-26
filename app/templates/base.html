@@ -18,8 +18,8 @@
 			<div id="app-name">
 				<h1>ChatApp</h1>
 				{% if current_user.is_authenticated %}
-					<button onclick="location.href='/profile';" class="inline btn btn-primary" id="redirect_to_profile_button">Профиль</button>
-					<button onclick="location.href='/logout';" class="inline btn btn-primary" id="logout_button">Выйти из профиля</button>
+					<button onclick="location.href='/profile';" class="inline btn btn-primary" id="go-to-profile-btn">Профиль</button>
+					<button onclick="location.href='/logout';" class="inline btn btn-primary" id="logout-btn">Выйти из профиля</button>
 				{% endif %}
 			</div>
 

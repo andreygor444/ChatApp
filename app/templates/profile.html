@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/cookie.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/profile_image_loader.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/get_unique_code.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -15,30 +15,28 @@
             </div>
             <form method="post" enctype="multipart/form-data">
                 <div id="profile-data-input">
-                    <div class="inline" id="new-chat-avatar">
+                    <div class="inline" id="user-avatar">
                         <label for="new-user-avatar-loader">
-                            <img width="200" height="200" id="new-user-avatar-img" src="{{ user.photo }}"  alt="Аватар пользователя">
+                            <img width="200" height="200" id="new-user-avatar-img" src="/static/img/user_avatars/{{ user.id }}/icon.png"  onerror="this.src = '/static/img/user_avatars/default/icon.png'">
                         </label>
                         <input type="file" name="file" id="new-user-avatar-loader" onchange="loadFile(this.files[0])">
                     </div>
                     <button type="button" id="reset-new-user-avatar-btn" class="btn close-btn"></button>
                     <div class="inline">
-                        <div id="new-chat-name">
-                            <input id="line_bio" name="name" type="text" value="{{ user.name }}" placeholder="Имя">
+                        <div>
+                            <input id="user-name" class="user-info" name="name" type="text" value="{{ user.name }}" placeholder="Имя">
                         </div>
-                        <div id="new-chat-name">
-                            <input id="line_bio" name="surname" type="text" value="{{ user.surname }}" placeholder="Фамилия">
+                        <div>
+                            <input class="user-info" name="surname" type="text" value="{{ user.surname }}" placeholder="Фамилия">
                         </div>
-                        <div id="new-chat-name">
-                            <div id="line_bio">
-                                Количество уведомлений - {{ user.notifications }}
-                            </div>
+                        <div class="user-info">
+                            Количество уведомлений - {{ notifications }}
                         </div>
                     </div>
                 </div>
-                <div id="button-change-profile-block">
-                    <button onclick="myFunction()" class="inline btn btn-primary" id="copy_link_button">Получить приглашение</button>
-                    <button class="inline btn btn-primary" id="change-button-profile">Изменить</button>
+                <div id="profile-buttons-container">
+                    <button onclick="getAndCopyUniqueCode()" class="inline btn btn-primary" id="get-link-btn">Получить приглашение</button>
+                    <button class="inline btn" id="change-profile-btn">Изменить</button>
                 </div>
             </form>
         </div>

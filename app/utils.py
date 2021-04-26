@@ -4,11 +4,12 @@ from threading import Thread
 from PIL import Image
 from io import BytesIO
 from typing import List, Union, Optional, Iterable
-from os import path, mkdir
+import os
 
 from db_session import create_session
 from models.user import User
 from models.chat import Chat
+from config import PATH_TO_ROOT
 
 
 def async_procedure(func):
@@ -33,12 +34,12 @@ def delayed_procedure(delay_time):
 	return decorator
 
 
-def load_image(image: bytes, path) -> None:
+def load_image(image: bytes, path: str) -> None:
 	with open(path, "wb") as image_file:
 		image_file.write(image)
 
 
-def make_icon(image: Union[str, bytes, BytesIO], path) -> None:
+def make_icon(image: Union[str, bytes, BytesIO], path: str) -> None:
 	"""Принимает картинку, обрезает её до квадрата и сохраняет"""
 	if isinstance(image, bytes):
 		image = BytesIO(image)
@@ -67,18 +68,19 @@ def add_user(name, surname, email, password, session: Optional[Session] = None) 
 	return user.id
 
 
-def change_user_in_profile(user, name, surname, photo):
-	session = create_session()
-	ch_user = session.query(User).filter(User.id == user.id).first()
-	ch_user.name = name
-	ch_user.surname = surname
-	if photo.filename != '':
-		if not path.isdir('/static/img/user_avatars/' + str(ch_user.id)):
-			mkdir('/static/img/user_avatars/' + str(ch_user.id))
-		path_todir = '/static/img/user_avatars/' + str(ch_user.id) + '/'
-		load_image(photo.read(), path_todir + 'avatar.png')
-		make_icon(photo, path_todir + 'icon.png')
+def edit_user(user: User, name: str, surname: str, avatar: bytes, session: Optional[Session] = None) -> None:
+	if session is None:
+		session = create_session()
+	session.query(User).filter(User.id == user.id).update({"name": name, "surname": surname})
 	session.commit()
+	if avatar:
+		user_avatar_dir = os.path.join(PATH_TO_ROOT, "static", "img", "user_avatars", str(user.id))
+		try:
+			os.mkdir(user_avatar_dir)
+		except FileExistsError:
+			pass
+		load_image(avatar.read(), os.path.join(user_avatar_dir, "avatar.png"))
+		make_icon(avatar, os.path.join(user_avatar_dir, "icon.png"))
 
 
 def add_chat(name: str, members: Union[Iterable[str], str], creator_id: int, session: Optional[Session] = None) -> int:

@@ -68,6 +68,27 @@ header {
 	display:inline-block;
 }
 
+#go-to-profile-btn {
+	width: 140px;
+	height: 40px;
+	border-radius: 20px;
+	font-size: 1.1em;
+	position: absolute;
+	right: 17%;
+	bottom: 25%;
+}
+
+#logout-btn {
+    width: 200px;
+	height: 40px;
+	border-radius: 20px;
+	font-size: 1.1em;
+	position: absolute;
+	right: 5%;
+	bottom: 25%;
+	background-color: #8B0000;
+}
+
 
 /* LOGIN/REGISTER PAGES */
 
@@ -552,6 +573,10 @@ header {
 	margin-bottom: 5px;
 }
 
+
+/* PROFILE PAGE */
+
+
 #profile-window {
 	width: 50%;
 	height: 50%;
@@ -564,6 +589,15 @@ header {
 	position: fixed;
 }
 
+#profile-inner {
+	width: 96%;
+	height: 94%;
+	margin-left: 2%;
+	margin-top: 1.3%;
+	border-radius: 15px;
+	background-color: #ffffff;
+}
+
 #profile-title {
 	width: 80%;
 	padding-left: 20%;
@@ -574,22 +608,55 @@ header {
 	width: 100%;
 }
 
-#profile-inner {
-	width: 96%;
-	height: 94%;
-	margin-left: 2%;
-	margin-top: 1.3%;
-	border-radius: 15px;
-	background-color: #ffffff;
+#profile-data-input {
+	width: 90%;
+	margin-left: 5%;
 }
 
-#button-change-profile-block {
+#user-avatar {
+	margin-top: 20px;
+	vertical-align: top;
+}
+
+#new-user-avatar-img {
+	border: 5px solid #326da6;
+	border-radius: 100px;
+}
+
+#new-user-avatar-img:hover {
+	cursor: pointer;
+	opacity: 0.7;
+}
+
+
+#user-name {
+	margin-top: 40px;
+}
+
+.user-info {
+	border: none;
+	border-bottom: 2px solid gray;
+	font-size: 2em;
+	outline: none;
+}
+
+#profile-buttons-container {
 	width: 80%;
 	margin-left: 10%;
 	margin-top: 20px;
 }
 
-#change-button-profile {
+#get-link-btn{
+    width: 300px;
+	height: 50px;
+	border-radius: 25px;
+	font-size: 1.3em;
+	position: absolute;
+	left: 5%;
+	bottom: 6%;
+}
+
+#change-profile-btn {
 	width: 200px;
 	height: 50px;
 	border-radius: 10px;
@@ -601,48 +668,9 @@ header {
 	background-color: #3ED520;
 }
 
-#line_bio {
-	border: none;
-	border-bottom: 2px solid gray;
-	font-size: 2em;
-	outline: none;
-}
 
-#redirect_to_profile_button {
-	width: 140px;
-	height: 40px;
-	border-radius: 20px;
-	font-size: 1.1em;
-	position: absolute;
-	right: 17%;
-	bottom: 25%;
-}
+/* 404 ERROR PAGE */
 
-#logout_button{
-    width: 200px;
-	height: 40px;
-	border-radius: 20px;
-	font-size: 1.1em;
-	position: absolute;
-	right: 5%;
-	bottom: 25%;
-	background-color: #8B0000;
-}
-
-#copy_link_button{
-    width: 300px;
-	height: 50px;
-	border-radius: 25px;
-	font-size: 1.3em;
-	position: absolute;
-	left: 5%;
-	bottom: 6%;
-}
-
-#profile-data-input {
-	width: 90%;
-	margin-left: 5%;
-}
 
 #error-404-block {
 	width: 50%;
@@ -669,14 +697,4 @@ header {
 	width: 90%;
     padding: 10px;
 	margin-left: 4%;
-}
-
-#new-user-avatar-img {
-	border: 5px solid #326da6;
-	border-radius: 100px;
-}
-
-#new-user-avatar-img:hover {
-	cursor: pointer;
-	opacity: 0.7;
 }
