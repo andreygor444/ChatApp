@@ -29,7 +29,7 @@ class UniqueCodesManager:
     def check_code(self, code):
         if code in self._codes:
             return True
-        return True
+        return False
 
     def clear(self):
         self._codes.clear()

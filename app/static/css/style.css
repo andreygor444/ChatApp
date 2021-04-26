@@ -853,14 +853,15 @@ header {
 	margin-top: 20px;
 }
 
-#get-link-btn {
-    width: 400px;
-	height: 50px;
-	border-radius: 25px;
-	font-size: 1.3em;
-	position: absolute;
-	left: 5%;
-	bottom: 6%;
+#invite-link {
+	width: 400px;
+	height: 60px;
+	margin-left: -70px;
+	margin-top: 70px;
+	background: #326da6;
+	border-radius: 30px;
+	text-align: center;
+	font-size: 1.2em;
 }
 
 #change-profile-btn {

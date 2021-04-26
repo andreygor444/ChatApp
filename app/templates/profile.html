@@ -2,7 +2,6 @@
 
 {% block head %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/profile_image_loader.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/get_unique_code.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -35,7 +34,9 @@
                     </div>
                 </div>
                 <div id="profile-buttons-container">
-                    <button onclick="getAndCopyUniqueCode()" class="inline btn btn-primary" id="get-link-btn">Получить пригласительную ссылку</button>
+                    <div class="inline" id="invite-link">
+                        <p>Пригласительная ссылка для друга:<br>{{ invite_link }}</p>
+                    </div>
                     <button class="inline btn" id="change-profile-btn">Изменить</button>
                 </div>
             </form>
